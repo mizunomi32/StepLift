@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from '@jest/globals';
 import * as setQueries from '@/lib/db/queries/workout-sets';
 import * as workoutQueries from '@/lib/db/queries/workouts';
 import type { Exercise } from '@/types/exercise';

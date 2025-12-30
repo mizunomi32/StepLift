@@ -1,152 +1,133 @@
-import { act, renderHook } from '@testing-library/react';
 import { useSettingsStore } from '../settings-store';
 
 describe('useSettingsStore', () => {
   beforeEach(() => {
-    // ストアをリセット
-    const { result } = renderHook(() => useSettingsStore());
-    act(() => {
-      result.current.setDailyStepGoal(10000);
-      result.current.setTheme('system');
-      result.current.setWeightUnit('kg');
+    // ストアをリセット（初期値に戻す）
+    useSettingsStore.setState({
+      dailyStepGoal: 10000,
+      theme: 'system',
+      weightUnit: 'kg',
+      isLoading: false,
     });
   });
 
   describe('初期状態', () => {
     it('デフォルト値が設定されている', () => {
-      const { result } = renderHook(() => useSettingsStore());
+      const state = useSettingsStore.getState();
 
-      expect(result.current.dailyStepGoal).toBe(10000);
-      expect(result.current.theme).toBe('system');
-      expect(result.current.weightUnit).toBe('kg');
+      expect(state.dailyStepGoal).toBe(10000);
+      expect(state.theme).toBe('system');
+      expect(state.weightUnit).toBe('kg');
     });
   });
 
   describe('setDailyStepGoal', () => {
     it('歩数目標を設定できる', async () => {
-      const { result } = renderHook(() => useSettingsStore());
+      const { setDailyStepGoal } = useSettingsStore.getState();
 
-      await act(async () => {
-        await result.current.setDailyStepGoal(8000);
-      });
+      await setDailyStepGoal(8000);
 
-      expect(result.current.dailyStepGoal).toBe(8000);
+      expect(useSettingsStore.getState().dailyStepGoal).toBe(8000);
     });
 
     it('負の値を拒否する', async () => {
-      const { result } = renderHook(() => useSettingsStore());
+      const { setDailyStepGoal } = useSettingsStore.getState();
 
-      await act(async () => {
-        await result.current.setDailyStepGoal(-1000);
-      });
+      await setDailyStepGoal(-1000);
 
       // 元の値のまま
-      expect(result.current.dailyStepGoal).toBe(10000);
+      expect(useSettingsStore.getState().dailyStepGoal).toBe(10000);
     });
 
     it('0を拒否する', async () => {
-      const { result } = renderHook(() => useSettingsStore());
+      const { setDailyStepGoal } = useSettingsStore.getState();
 
-      await act(async () => {
-        await result.current.setDailyStepGoal(0);
-      });
+      await setDailyStepGoal(0);
 
       // 元の値のまま
-      expect(result.current.dailyStepGoal).toBe(10000);
+      expect(useSettingsStore.getState().dailyStepGoal).toBe(10000);
     });
   });
 
   describe('setTheme', () => {
-    it('ライトテーマに設定できる', () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('ライトテーマに設定できる', async () => {
+      const { setTheme } = useSettingsStore.getState();
 
-      act(() => {
-        result.current.setTheme('light');
-      });
+      await setTheme('light');
 
-      expect(result.current.theme).toBe('light');
+      expect(useSettingsStore.getState().theme).toBe('light');
     });
 
-    it('ダークテーマに設定できる', () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('ダークテーマに設定できる', async () => {
+      const { setTheme } = useSettingsStore.getState();
 
-      act(() => {
-        result.current.setTheme('dark');
-      });
+      await setTheme('dark');
 
-      expect(result.current.theme).toBe('dark');
+      expect(useSettingsStore.getState().theme).toBe('dark');
     });
 
-    it('システムテーマに設定できる', () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('システムテーマに設定できる', async () => {
+      const { setTheme } = useSettingsStore.getState();
 
-      act(() => {
-        result.current.setTheme('system');
-      });
+      await setTheme('system');
 
-      expect(result.current.theme).toBe('system');
+      expect(useSettingsStore.getState().theme).toBe('system');
     });
   });
 
   describe('setWeightUnit', () => {
-    it('kg単位に設定できる', () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('kg単位に設定できる', async () => {
+      const { setWeightUnit } = useSettingsStore.getState();
 
-      act(() => {
-        result.current.setWeightUnit('kg');
-      });
+      await setWeightUnit('kg');
 
-      expect(result.current.weightUnit).toBe('kg');
+      expect(useSettingsStore.getState().weightUnit).toBe('kg');
     });
 
-    it('lb単位に設定できる', () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('lb単位に設定できる', async () => {
+      const { setWeightUnit } = useSettingsStore.getState();
 
-      act(() => {
-        result.current.setWeightUnit('lb');
-      });
+      await setWeightUnit('lb');
 
-      expect(result.current.weightUnit).toBe('lb');
+      expect(useSettingsStore.getState().weightUnit).toBe('lb');
     });
   });
 
   describe('loadSettings', () => {
     it('設定を読み込める', async () => {
-      const { result } = renderHook(() => useSettingsStore());
+      const { loadSettings } = useSettingsStore.getState();
 
-      await act(async () => {
-        await result.current.loadSettings();
-      });
+      await loadSettings();
 
+      const state = useSettingsStore.getState();
       // デフォルト値または保存された値が読み込まれる
-      expect(result.current.dailyStepGoal).toBeGreaterThan(0);
-      expect(['light', 'dark', 'system']).toContain(result.current.theme);
-      expect(['kg', 'lb']).toContain(result.current.weightUnit);
+      expect(state.dailyStepGoal).toBeGreaterThan(0);
+      expect(['light', 'dark', 'system']).toContain(state.theme);
+      expect(['kg', 'lb']).toContain(state.weightUnit);
     });
   });
 
   describe('永続化', () => {
-    it('設定を保存して読み込める', async () => {
-      const { result } = renderHook(() => useSettingsStore());
+    it('設定を保存するとAsyncStorageに保存される', async () => {
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      const store = useSettingsStore.getState();
 
       // 設定を変更
-      await act(async () => {
-        await result.current.setDailyStepGoal(12000);
-        result.current.setTheme('dark');
-        result.current.setWeightUnit('lb');
-      });
+      await store.setDailyStepGoal(12000);
+      await store.setTheme('dark');
+      await store.setWeightUnit('lb');
 
-      // 新しいストアインスタンスを作成して読み込み
-      const { result: result2 } = renderHook(() => useSettingsStore());
+      // AsyncStorage.setItemが呼ばれたことを確認
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('settings.dailyStepGoal', '12000');
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('settings.theme', 'dark');
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('settings.weightUnit', 'lb');
 
-      await act(async () => {
-        await result2.current.loadSettings();
-      });
-
-      // 保存された値が読み込まれる
-      expect(result2.current.dailyStepGoal).toBe(12000);
-      expect(result2.current.theme).toBe('dark');
-      expect(result2.current.weightUnit).toBe('lb');
+      // ストアの状態も更新されていることを確認
+      const state = useSettingsStore.getState();
+      expect(state.dailyStepGoal).toBe(12000);
+      expect(state.theme).toBe('dark');
+      expect(state.weightUnit).toBe('lb');
     });
   });
 });
+

@@ -14,4 +14,5 @@ module.exports = {
     '!components/**/*.test.{ts,tsx}',
     '!app/**/*.test.{ts,tsx}',
   ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };

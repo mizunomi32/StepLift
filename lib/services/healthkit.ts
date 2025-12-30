@@ -123,15 +123,17 @@ export async function getStepHistory(days: number): Promise<StepRecord[]> {
         return;
       }
 
-      const stepRecords: StepRecord[] = results.map((sample) => {
+      const stepRecords: StepRecord[] = results.map((sample, index) => {
         const sampleDate = new Date(sample.startDate);
         const dateStr = sampleDate.toISOString().split('T')[0];
 
         return {
+          id: `healthkit-${dateStr}-${index}`,
           date: dateStr,
           steps: sample.value,
+          distanceKm: null,
+          calories: null,
           source: 'healthkit' as const,
-          deviceName: null,
           createdAt: new Date().toISOString(),
         };
       });

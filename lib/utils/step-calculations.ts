@@ -11,10 +11,10 @@ export function estimateStrideLength(heightCm: number): number {
 /**
  * 距離計算
  * @param steps 歩数
- * @param strideLengthM 歩幅（m）
+ * @param strideLengthM 歩幅（m）、デフォルト0.7m（身長170cmの場合）
  * @returns 距離（km）
  */
-export function calculateDistance(steps: number, strideLengthM: number): number {
+export function calculateDistance(steps: number, strideLengthM: number = 0.7): number {
   if (steps === 0) return 0;
   const distanceM = steps * strideLengthM;
   return distanceM / 1000; // kmに変換
@@ -23,10 +23,10 @@ export function calculateDistance(steps: number, strideLengthM: number): number 
 /**
  * カロリー計算
  * @param steps 歩数
- * @param weightKg 体重（kg）
+ * @param weightKg 体重（kg）、デフォルト60kg
  * @returns 消費カロリー（kcal）
  */
-export function calculateCalories(steps: number, weightKg: number): number {
+export function calculateCalories(steps: number, weightKg: number = 60): number {
   if (steps === 0) return 0;
   // 概算式: 歩数 × 体重 × 0.0004
   // 例: 10000歩 × 70kg × 0.0004 = 280kcal

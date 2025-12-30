@@ -56,7 +56,7 @@ export default function SettingsScreen() {
         { text: 'キャンセル', style: 'cancel' },
         {
           text: '設定',
-          onPress: async (value) => {
+          onPress: async (value: string | undefined) => {
             if (value) {
               const steps = parseInt(value, 10);
               if (!Number.isNaN(steps) && steps > 0) {

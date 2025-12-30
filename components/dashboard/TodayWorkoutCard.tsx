@@ -14,8 +14,8 @@ export function TodayWorkoutCard({ workout, onStartWorkout }: TodayWorkoutCardPr
       <Card className="p-4 my-4">
         <Text className="text-lg font-semibold text-white mb-4">今日のワークアウト</Text>
         <Text className="text-gray-400 text-center mb-4">まだ記録がありません</Text>
-        <Button onPress={onStartWorkout} className="w-full">
-          <Text className="text-white text-center">ワークアウトを開始</Text>
+        <Button onPress={onStartWorkout} fullWidth>
+          ワークアウトを開始
         </Button>
       </Card>
     );

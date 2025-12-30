@@ -2,6 +2,24 @@ import type { StepRecord } from '@/types/steps';
 import type { Workout } from '@/types/workout';
 
 /**
+ * 日付をローカルタイムゾーンのYYYY-MM-DD形式に変換
+ */
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * ISO文字列またはDateからローカルタイムゾーンの日付文字列を抽出
+ */
+function extractLocalDate(isoString: string): string {
+  const date = new Date(isoString);
+  return formatLocalDate(date);
+}
+
+/**
  * 連続トレーニング日数を計算
  * @param workouts ワークアウト一覧（新しい順にソート済みを想定）
  * @returns 連続トレーニング日数
@@ -11,9 +29,9 @@ export function calculateWorkoutStreak(workouts: Workout[]): number {
     return 0;
   }
 
-  // 日付のみを抽出してユニークな日付のリストを作成
+  // 日付のみを抽出してユニークな日付のリストを作成（ローカルタイムゾーン基準）
   const workoutDates = workouts
-    .map((workout) => workout.startedAt.split('T')[0])
+    .map((workout) => extractLocalDate(workout.startedAt))
     .filter((date, index, self) => self.indexOf(date) === index)
     .sort()
     .reverse(); // 新しい日付から古い日付へ
@@ -23,12 +41,11 @@ export function calculateWorkoutStreak(workouts: Workout[]): number {
   }
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().split('T')[0];
+  const todayStr = formatLocalDate(today);
 
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const yesterdayStr = formatLocalDate(yesterday);
 
   // 最新のワークアウト日が今日または昨日でない場合、ストリークは0
   const latestWorkoutDate = workoutDates[0];
@@ -38,14 +55,17 @@ export function calculateWorkoutStreak(workouts: Workout[]): number {
 
   // 連続日数をカウント
   let streak = 0;
-  const currentDate = new Date(latestWorkoutDate);
+  let expectedDate = new Date(today);
+  if (latestWorkoutDate === yesterdayStr) {
+    expectedDate.setDate(expectedDate.getDate() - 1);
+  }
 
   for (const workoutDate of workoutDates) {
-    const expectedDateStr = currentDate.toISOString().split('T')[0];
+    const expectedDateStr = formatLocalDate(expectedDate);
 
     if (workoutDate === expectedDateStr) {
       streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
+      expectedDate.setDate(expectedDate.getDate() - 1);
     } else {
       break;
     }
@@ -65,10 +85,11 @@ export function calculateStepStreak(records: StepRecord[], goal: number): number
     return 0;
   }
 
-  // 目標達成日のみをフィルタ
+  // 目標達成日のみをフィルタ（recordのdateはYYYY-MM-DD形式を想定）
   const achievedDates = records
     .filter((record) => record.steps >= goal)
     .map((record) => record.date)
+    .filter((date, index, self) => self.indexOf(date) === index)
     .sort()
     .reverse(); // 新しい日付から古い日付へ
 
@@ -77,12 +98,11 @@ export function calculateStepStreak(records: StepRecord[], goal: number): number
   }
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().split('T')[0];
+  const todayStr = formatLocalDate(today);
 
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split('T')[0];
+  const yesterdayStr = formatLocalDate(yesterday);
 
   // 最新の達成日が今日または昨日でない場合、ストリークは0
   const latestAchievedDate = achievedDates[0];
@@ -92,14 +112,17 @@ export function calculateStepStreak(records: StepRecord[], goal: number): number
 
   // 連続日数をカウント
   let streak = 0;
-  const currentDate = new Date(latestAchievedDate);
+  let expectedDate = new Date(today);
+  if (latestAchievedDate === yesterdayStr) {
+    expectedDate.setDate(expectedDate.getDate() - 1);
+  }
 
   for (const achievedDate of achievedDates) {
-    const expectedDateStr = currentDate.toISOString().split('T')[0];
+    const expectedDateStr = formatLocalDate(expectedDate);
 
     if (achievedDate === expectedDateStr) {
       streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
+      expectedDate.setDate(expectedDate.getDate() - 1);
     } else {
       break;
     }

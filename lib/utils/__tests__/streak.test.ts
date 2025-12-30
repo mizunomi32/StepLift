@@ -2,6 +2,38 @@ import type { StepRecord } from '@/types/steps';
 import type { Workout } from '@/types/workout';
 import { calculateStepStreak, calculateWorkoutStreak } from '../streak';
 
+// ローカルタイムゾーンでYYYY-MM-DD形式の日付文字列を生成
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// テスト用のワークアウトを作成（日付はローカルタイムゾーン基準）
+function createWorkout(date: Date, id: string): Workout {
+  return {
+    id,
+    startedAt: date.toISOString(),
+    finishedAt: date.toISOString(),
+    notes: null,
+    createdAt: date.toISOString(),
+  };
+}
+
+// テスト用のステップレコードを作成
+function createStepRecord(date: Date, steps: number, id: string): StepRecord {
+  return {
+    id,
+    date: formatLocalDate(date),
+    steps,
+    distanceKm: steps * 0.0007,
+    calories: steps * 0.04,
+    source: 'sensor' as const,
+    createdAt: date.toISOString(),
+  };
+}
+
 describe('streak.ts', () => {
   describe('calculateWorkoutStreak', () => {
     it('連続トレーニング日数が0日の場合', () => {
@@ -11,15 +43,7 @@ describe('streak.ts', () => {
 
     it('連続トレーニング日数が1日の場合', () => {
       const today = new Date();
-      const workouts: Workout[] = [
-        {
-          id: '1',
-          startedAt: today.toISOString(),
-          finishedAt: today.toISOString(),
-          notes: null,
-          createdAt: today.toISOString(),
-        },
-      ];
+      const workouts: Workout[] = [createWorkout(today, '1')];
       expect(calculateWorkoutStreak(workouts)).toBe(1);
     });
 
@@ -31,27 +55,9 @@ describe('streak.ts', () => {
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
       const workouts: Workout[] = [
-        {
-          id: '1',
-          startedAt: today.toISOString(),
-          finishedAt: today.toISOString(),
-          notes: null,
-          createdAt: today.toISOString(),
-        },
-        {
-          id: '2',
-          startedAt: yesterday.toISOString(),
-          finishedAt: yesterday.toISOString(),
-          notes: null,
-          createdAt: yesterday.toISOString(),
-        },
-        {
-          id: '3',
-          startedAt: twoDaysAgo.toISOString(),
-          finishedAt: twoDaysAgo.toISOString(),
-          notes: null,
-          createdAt: twoDaysAgo.toISOString(),
-        },
+        createWorkout(today, '1'),
+        createWorkout(yesterday, '2'),
+        createWorkout(twoDaysAgo, '3'),
       ];
       expect(calculateWorkoutStreak(workouts)).toBe(3);
     });
@@ -62,20 +68,8 @@ describe('streak.ts', () => {
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
 
       const workouts: Workout[] = [
-        {
-          id: '1',
-          startedAt: today.toISOString(),
-          finishedAt: today.toISOString(),
-          notes: null,
-          createdAt: today.toISOString(),
-        },
-        {
-          id: '2',
-          startedAt: threeDaysAgo.toISOString(),
-          finishedAt: threeDaysAgo.toISOString(),
-          notes: null,
-          createdAt: threeDaysAgo.toISOString(),
-        },
+        createWorkout(today, '1'),
+        createWorkout(threeDaysAgo, '2'),
       ];
       expect(calculateWorkoutStreak(workouts)).toBe(1);
     });
@@ -83,20 +77,8 @@ describe('streak.ts', () => {
     it('同じ日に複数のワークアウトがあっても1日とカウント', () => {
       const today = new Date();
       const workouts: Workout[] = [
-        {
-          id: '1',
-          startedAt: today.toISOString(),
-          finishedAt: today.toISOString(),
-          notes: null,
-          createdAt: today.toISOString(),
-        },
-        {
-          id: '2',
-          startedAt: today.toISOString(),
-          finishedAt: today.toISOString(),
-          notes: null,
-          createdAt: today.toISOString(),
-        },
+        createWorkout(today, '1'),
+        createWorkout(today, '2'),
       ];
       expect(calculateWorkoutStreak(workouts)).toBe(1);
     });
@@ -108,20 +90,8 @@ describe('streak.ts', () => {
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
       const workouts: Workout[] = [
-        {
-          id: '1',
-          startedAt: yesterday.toISOString(),
-          finishedAt: yesterday.toISOString(),
-          notes: null,
-          createdAt: yesterday.toISOString(),
-        },
-        {
-          id: '2',
-          startedAt: twoDaysAgo.toISOString(),
-          finishedAt: twoDaysAgo.toISOString(),
-          notes: null,
-          createdAt: twoDaysAgo.toISOString(),
-        },
+        createWorkout(yesterday, '1'),
+        createWorkout(twoDaysAgo, '2'),
       ];
       expect(calculateWorkoutStreak(workouts)).toBe(2);
     });
@@ -134,18 +104,8 @@ describe('streak.ts', () => {
     });
 
     it('連続歩数目標達成日数が1日の場合', () => {
-      const today = new Date().toISOString().split('T')[0];
-      const records: StepRecord[] = [
-        {
-          id: '1',
-          date: today,
-          steps: 12000,
-          distanceKm: 8.0,
-          calories: 400,
-          source: 'sensor',
-          createdAt: new Date().toISOString(),
-        },
-      ];
+      const today = new Date();
+      const records: StepRecord[] = [createStepRecord(today, 12000, '1')];
       expect(calculateStepStreak(records, 10000)).toBe(1);
     });
 
@@ -157,33 +117,9 @@ describe('streak.ts', () => {
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
       const records: StepRecord[] = [
-        {
-          id: '1',
-          date: today.toISOString().split('T')[0],
-          steps: 12000,
-          distanceKm: 8.0,
-          calories: 400,
-          source: 'sensor',
-          createdAt: today.toISOString(),
-        },
-        {
-          id: '2',
-          date: yesterday.toISOString().split('T')[0],
-          steps: 11000,
-          distanceKm: 7.5,
-          calories: 380,
-          source: 'sensor',
-          createdAt: yesterday.toISOString(),
-        },
-        {
-          id: '3',
-          date: twoDaysAgo.toISOString().split('T')[0],
-          steps: 10500,
-          distanceKm: 7.0,
-          calories: 360,
-          source: 'sensor',
-          createdAt: twoDaysAgo.toISOString(),
-        },
+        createStepRecord(today, 12000, '1'),
+        createStepRecord(yesterday, 11000, '2'),
+        createStepRecord(twoDaysAgo, 10500, '3'),
       ];
       expect(calculateStepStreak(records, 10000)).toBe(3);
     });
@@ -196,33 +132,9 @@ describe('streak.ts', () => {
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
       const records: StepRecord[] = [
-        {
-          id: '1',
-          date: today.toISOString().split('T')[0],
-          steps: 12000,
-          distanceKm: 8.0,
-          calories: 400,
-          source: 'sensor',
-          createdAt: today.toISOString(),
-        },
-        {
-          id: '2',
-          date: yesterday.toISOString().split('T')[0],
-          steps: 8000, // 目標未達成
-          distanceKm: 5.5,
-          calories: 300,
-          source: 'sensor',
-          createdAt: yesterday.toISOString(),
-        },
-        {
-          id: '3',
-          date: twoDaysAgo.toISOString().split('T')[0],
-          steps: 11000,
-          distanceKm: 7.5,
-          calories: 380,
-          source: 'sensor',
-          createdAt: twoDaysAgo.toISOString(),
-        },
+        createStepRecord(today, 12000, '1'),
+        createStepRecord(yesterday, 8000, '2'), // 目標未達成
+        createStepRecord(twoDaysAgo, 11000, '3'),
       ];
       expect(calculateStepStreak(records, 10000)).toBe(1);
     });
@@ -234,41 +146,15 @@ describe('streak.ts', () => {
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
       const records: StepRecord[] = [
-        {
-          id: '1',
-          date: yesterday.toISOString().split('T')[0],
-          steps: 12000,
-          distanceKm: 8.0,
-          calories: 400,
-          source: 'sensor',
-          createdAt: yesterday.toISOString(),
-        },
-        {
-          id: '2',
-          date: twoDaysAgo.toISOString().split('T')[0],
-          steps: 11000,
-          distanceKm: 7.5,
-          calories: 380,
-          source: 'sensor',
-          createdAt: twoDaysAgo.toISOString(),
-        },
+        createStepRecord(yesterday, 12000, '1'),
+        createStepRecord(twoDaysAgo, 11000, '2'),
       ];
       expect(calculateStepStreak(records, 10000)).toBe(2);
     });
 
     it('ちょうど目標値の場合も達成とみなす', () => {
-      const today = new Date().toISOString().split('T')[0];
-      const records: StepRecord[] = [
-        {
-          id: '1',
-          date: today,
-          steps: 10000, // ちょうど目標値
-          distanceKm: 7.0,
-          calories: 350,
-          source: 'sensor',
-          createdAt: new Date().toISOString(),
-        },
-      ];
+      const today = new Date();
+      const records: StepRecord[] = [createStepRecord(today, 10000, '1')];
       expect(calculateStepStreak(records, 10000)).toBe(1);
     });
   });
