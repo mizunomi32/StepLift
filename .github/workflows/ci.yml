@@ -26,6 +26,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Biome
+        uses: actions/cache@v4
+        with:
+          path: .biome
+          key: ${{ runner.os }}-biome-${{ hashFiles('biome.json', 'pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-biome-
+
       - name: Run Biome lint
         run: pnpm lint
 
@@ -47,6 +55,17 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Cache Jest
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/jest
+            .jest-cache
+          key: ${{ runner.os }}-jest-${{ hashFiles('**/pnpm-lock.yaml', 'jest.config.js') }}-${{ hashFiles('**/*.test.{ts,tsx,js,jsx}') }}
+          restore-keys: |
+            ${{ runner.os }}-jest-${{ hashFiles('**/pnpm-lock.yaml', 'jest.config.js') }}-
+            ${{ runner.os }}-jest-
 
       - name: Run tests
         run: pnpm test
