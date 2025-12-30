@@ -1,7 +1,20 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import { WorkoutCalendar } from '../WorkoutCalendar';
 
+// 2025-01-15にDateを固定
+const MOCK_DATE = new Date('2025-01-15T12:00:00.000Z');
+
 describe('WorkoutCalendar', () => {
+  // 日付をモック
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(MOCK_DATE);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   const mockWorkouts = [
     {
       id: 'workout1',
@@ -31,7 +44,7 @@ describe('WorkoutCalendar', () => {
       />
     );
 
-    expect(getByText(/2025年/)).toBeTruthy();
+    expect(getByText(/2025年1月/)).toBeTruthy();
   });
 
   it('ワークアウト実施日にドットが表示される', () => {
@@ -75,10 +88,13 @@ describe('WorkoutCalendar', () => {
       />
     );
 
+    // 初期状態のonMonthChange呼び出しをリセット
+    onMonthChange.mockClear();
+
     fireEvent.press(getByTestId('next-month-button'));
     expect(onMonthChange).toHaveBeenCalledWith('2025-02');
 
     fireEvent.press(getByTestId('prev-month-button'));
-    expect(onMonthChange).toHaveBeenCalledWith('2024-12');
+    expect(onMonthChange).toHaveBeenCalledWith('2025-01');
   });
 });

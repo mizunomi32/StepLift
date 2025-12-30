@@ -29,7 +29,8 @@ describe('StepGoalRing', () => {
 
     expect(getByTestId('step-goal-ring')).toBeTruthy();
     expect(getByText('12,456')).toBeTruthy();
-    expect(getByText('124%')).toBeTruthy();
+    // 12456/10000 = 124.56% -> Math.round = 125%
+    expect(getByText('125%')).toBeTruthy();
   });
 
   it('歩数がゼロの場合に正しく表示される', () => {

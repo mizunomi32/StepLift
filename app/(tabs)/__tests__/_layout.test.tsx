@@ -2,21 +2,43 @@ import { render, screen } from '@testing-library/react-native';
 import TabLayout from '../_layout';
 
 // Mock dependencies
-jest.mock('expo-router', () => ({
-  Tabs: ({ children, screenOptions }: any) => (
-    <div data-testid="tabs" data-screen-options={JSON.stringify(screenOptions)}>
-      {children}
-    </div>
-  ),
-}));
+jest.mock('expo-router', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+
+  const MockScreen = ({ name, options }: any) =>
+    React.createElement(
+      View,
+      { testID: `tab-screen-${name}` },
+      React.createElement(Text, null, options?.title)
+    );
+
+  const MockTabs = ({ children, screenOptions }: any) =>
+    React.createElement(
+      View,
+      {
+        testID: 'tabs',
+        'data-screen-options': JSON.stringify(screenOptions),
+      },
+      children
+    );
+  MockTabs.Screen = MockScreen;
+
+  return { Tabs: MockTabs };
+});
 
 jest.mock('@/components/haptic-tab', () => ({
   HapticTab: 'HapticTab',
 }));
 
-jest.mock('@/components/ui/icon-symbol', () => ({
-  IconSymbol: ({ name }: any) => <div data-testid={`icon-${name}`}>{name}</div>,
-}));
+jest.mock('@/components/ui/icon-symbol', () => {
+  const React = require('react');
+  const { View, Text } = require('react-native');
+  return {
+    IconSymbol: ({ name }: any) =>
+      React.createElement(View, { testID: `icon-${name}` }, React.createElement(Text, null, name)),
+  };
+});
 
 jest.mock('@/hooks/use-color-scheme', () => ({
   useColorScheme: () => 'dark',
@@ -34,9 +56,12 @@ jest.mock('@/constants/theme', () => ({
 
 describe('TabLayout', () => {
   it('4つのタブが正しく定義されている', () => {
-    const { UNSAFE_getAllByType } = render(<TabLayout />);
-    const tabs = UNSAFE_getAllByType('Tabs.Screen' as any);
-    expect(tabs).toHaveLength(4);
+    render(<TabLayout />);
+    // モックのtab-screen-{name}でタブをカウント
+    expect(screen.getByTestId('tab-screen-index')).toBeTruthy();
+    expect(screen.getByTestId('tab-screen-workout')).toBeTruthy();
+    expect(screen.getByTestId('tab-screen-steps')).toBeTruthy();
+    expect(screen.getByTestId('tab-screen-history')).toBeTruthy();
   });
 
   it('ホームタブが正しく設定されている', () => {

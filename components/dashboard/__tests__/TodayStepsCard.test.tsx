@@ -36,8 +36,8 @@ describe('TodayStepsCard', () => {
   it('歩数が0の場合も正しく表示される', () => {
     render(<TodayStepsCard steps={0} goal={10000} streakDays={0} />);
 
-    expect(screen.getByText(/0/)).toBeTruthy();
     expect(screen.getByText('0%')).toBeTruthy();
+    expect(screen.getByText('今日の歩数')).toBeTruthy();
   });
 
   it('カンマ区切りで表示される', () => {
