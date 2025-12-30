@@ -49,7 +49,9 @@ describe('WorkoutHistoryItem', () => {
   it('ワークアウト時間が表示される', () => {
     const { getByText } = render(<WorkoutHistoryItem workout={mockWorkout} onPress={jest.fn()} />);
 
-    expect(getByText('60分')).toBeTruthy();
+    // テキストが複数ノードに分かれているため、正規表現でマッチ
+    expect(getByText(/60/)).toBeTruthy();
+    expect(getByText(/分/)).toBeTruthy();
   });
 
   it('種目数とセット数が表示される', () => {

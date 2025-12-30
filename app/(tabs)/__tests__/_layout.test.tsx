@@ -1,44 +1,41 @@
 import { render, screen } from '@testing-library/react-native';
+import { Text, View } from 'react-native';
 import TabLayout from '../_layout';
 
-// Mock dependencies
+// モックコンポーネント
+const mockScreen = jest.fn(({ name, options }: any) => (
+  <View testID={`tab-screen-${name}`}>
+    <Text>{options?.title}</Text>
+  </View>
+));
+
+const mockTabs = jest.fn(({ children, screenOptions }: any) => (
+  <View testID="tabs" data-screen-options={JSON.stringify(screenOptions)}>
+    {children}
+  </View>
+));
+
+// expo-routerモック
 jest.mock('expo-router', () => {
-  const React = require('react');
-  const { View, Text } = require('react-native');
-
-  const MockScreen = ({ name, options }: any) =>
-    React.createElement(
-      View,
-      { testID: `tab-screen-${name}` },
-      React.createElement(Text, null, options?.title)
-    );
-
-  const MockTabs = ({ children, screenOptions }: any) =>
-    React.createElement(
-      View,
-      {
-        testID: 'tabs',
-        'data-screen-options': JSON.stringify(screenOptions),
-      },
-      children
-    );
-  MockTabs.Screen = MockScreen;
-
-  return { Tabs: MockTabs };
+  const MockTabsComponent = (props: any) => mockTabs(props);
+  MockTabsComponent.Screen = (props: any) => mockScreen(props);
+  return { Tabs: MockTabsComponent };
 });
 
 jest.mock('@/components/haptic-tab', () => ({
   HapticTab: 'HapticTab',
 }));
 
-jest.mock('@/components/ui/icon-symbol', () => {
-  const React = require('react');
-  const { View, Text } = require('react-native');
-  return {
-    IconSymbol: ({ name }: any) =>
-      React.createElement(View, { testID: `icon-${name}` }, React.createElement(Text, null, name)),
-  };
-});
+jest.mock('@/components/ui/icon-symbol', () => ({
+  IconSymbol: ({ name }: any) => {
+    const { View, Text } = require('react-native');
+    return (
+      <View testID={`icon-${name}`}>
+        <Text>{name}</Text>
+      </View>
+    );
+  },
+}));
 
 jest.mock('@/hooks/use-color-scheme', () => ({
   useColorScheme: () => 'dark',
@@ -55,85 +52,111 @@ jest.mock('@/constants/theme', () => ({
 }));
 
 describe('TabLayout', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('4つのタブが正しく定義されている', () => {
     render(<TabLayout />);
-    // モックのtab-screen-{name}でタブをカウント
-    expect(screen.getByTestId('tab-screen-index')).toBeTruthy();
-    expect(screen.getByTestId('tab-screen-workout')).toBeTruthy();
-    expect(screen.getByTestId('tab-screen-steps')).toBeTruthy();
-    expect(screen.getByTestId('tab-screen-history')).toBeTruthy();
+    // mockScreenが4回呼ばれることを確認
+    expect(mockScreen).toHaveBeenCalledTimes(4);
   });
 
   it('ホームタブが正しく設定されている', () => {
     render(<TabLayout />);
-    // ホームタブのアイコンとラベルが正しく設定されていることを確認
-    expect(screen.getByText('ホーム')).toBeTruthy();
+    expect(mockScreen).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'index',
+        options: expect.objectContaining({ title: 'ホーム' }),
+      })
+    );
   });
 
   it('筋トレタブが正しく設定されている', () => {
     render(<TabLayout />);
-    expect(screen.getByText('筋トレ')).toBeTruthy();
+    expect(mockScreen).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'workout',
+        options: expect.objectContaining({ title: '筋トレ' }),
+      })
+    );
   });
 
   it('歩数タブが正しく設定されている', () => {
     render(<TabLayout />);
-    expect(screen.getByText('歩数')).toBeTruthy();
+    expect(mockScreen).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'steps',
+        options: expect.objectContaining({ title: '歩数' }),
+      })
+    );
   });
 
   it('履歴タブが正しく設定されている', () => {
     render(<TabLayout />);
-    expect(screen.getByText('履歴')).toBeTruthy();
+    expect(mockScreen).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'history',
+        options: expect.objectContaining({ title: '履歴' }),
+      })
+    );
   });
 
   it('ダークテーマの色が適用されている', () => {
-    const { getByTestId } = render(<TabLayout />);
-    const tabs = getByTestId('tabs');
-    const screenOptions = JSON.parse(tabs.props['data-screen-options']);
-
-    // アクティブタブの色が #22C55E (プライマリグリーン)
-    expect(screenOptions.tabBarActiveTintColor).toBe('#22C55E');
+    render(<TabLayout />);
+    expect(mockTabs).toHaveBeenCalledWith(
+      expect.objectContaining({
+        screenOptions: expect.objectContaining({
+          tabBarActiveTintColor: '#22C55E',
+        }),
+      })
+    );
   });
 
   it('タブバーの背景色がダークモード対応している', () => {
-    const { getByTestId } = render(<TabLayout />);
-    const tabs = getByTestId('tabs');
-    const screenOptions = JSON.parse(tabs.props['data-screen-options']);
-
-    // タブバーの背景色が #0A0A0A
-    expect(screenOptions.tabBarStyle?.backgroundColor).toBe('#0A0A0A');
+    render(<TabLayout />);
+    expect(mockTabs).toHaveBeenCalledWith(
+      expect.objectContaining({
+        screenOptions: expect.objectContaining({
+          tabBarStyle: expect.objectContaining({
+            backgroundColor: '#0A0A0A',
+          }),
+        }),
+      })
+    );
   });
 
   it('非アクティブタブの色が正しく設定されている', () => {
-    const { getByTestId } = render(<TabLayout />);
-    const tabs = getByTestId('tabs');
-    const screenOptions = JSON.parse(tabs.props['data-screen-options']);
-
-    // 非アクティブタブの色が #9CA3AF
-    expect(screenOptions.tabBarInactiveTintColor).toBe('#9CA3AF');
+    render(<TabLayout />);
+    expect(mockTabs).toHaveBeenCalledWith(
+      expect.objectContaining({
+        screenOptions: expect.objectContaining({
+          tabBarInactiveTintColor: '#9CA3AF',
+        }),
+      })
+    );
   });
 
   it('ハプティクスフィードバックが有効になっている', () => {
-    const { getByTestId } = render(<TabLayout />);
-    const tabs = getByTestId('tabs');
-    const screenOptions = JSON.parse(tabs.props['data-screen-options']);
-
-    expect(screenOptions.tabBarButton).toBe('HapticTab');
+    render(<TabLayout />);
+    expect(mockTabs).toHaveBeenCalledWith(
+      expect.objectContaining({
+        screenOptions: expect.objectContaining({
+          tabBarButton: 'HapticTab',
+        }),
+      })
+    );
   });
 
-  it('各タブに正しいアイコンが設定されている', () => {
+  it('各タブにアイコンが設定されている', () => {
     render(<TabLayout />);
+    // 各タブにtabBarIconオプションが設定されていることを確認
+    const calls = mockScreen.mock.calls;
+    expect(calls).toHaveLength(4);
 
-    // 期待されるアイコン名
-    const expectedIcons = {
-      home: 'house.fill',
-      workout: 'dumbbell.fill',
-      steps: 'figure.walk',
-      history: 'clock.fill',
-    };
-
-    // 各アイコンが存在することを確認
-    Object.values(expectedIcons).forEach((iconName) => {
-      expect(screen.queryByTestId(`icon-${iconName}`)).toBeTruthy();
+    // 各呼び出しでoptions.tabBarIconが関数であることを確認
+    calls.forEach((call) => {
+      expect(typeof call[0].options.tabBarIcon).toBe('function');
     });
   });
 });

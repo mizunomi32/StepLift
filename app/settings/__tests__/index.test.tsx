@@ -16,9 +16,10 @@ jest.mock('@/lib/stores/settings-store', () => ({
 
 describe('SettingsScreen', () => {
   it('正しくレンダリングされる', () => {
-    const { getByText } = render(<SettingsScreen />);
+    const { getByTestId } = render(<SettingsScreen />);
 
-    expect(getByText('設定')).toBeTruthy();
+    // ヘッダーの「設定」はStack.Screenで表示されるため、セクションで確認
+    expect(getByTestId('settings-section-目標')).toBeTruthy();
   });
 
   it('目標セクションが表示される', () => {

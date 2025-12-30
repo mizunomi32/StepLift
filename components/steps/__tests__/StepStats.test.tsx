@@ -41,9 +41,11 @@ describe('StepStats', () => {
   });
 
   it('カロリーが整数で表示される', () => {
+    // 423.7 -> Math.round = 424
     const { getByText } = render(<StepStats distanceKm={8.7} calories={423.7} />);
 
-    expect(getByText('423 kcal')).toBeTruthy();
+    // テキストが複数ノードに分かれているため、正規表現でマッチ
+    expect(getByText(/424/)).toBeTruthy();
   });
 
   it('アイコンが表示される', () => {

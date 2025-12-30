@@ -7,7 +7,6 @@ describe('useSettingsStore', () => {
       dailyStepGoal: 10000,
       theme: 'system',
       weightUnit: 'kg',
-      isLoading: false,
     });
   });
 

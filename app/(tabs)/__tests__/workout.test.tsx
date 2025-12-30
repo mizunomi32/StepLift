@@ -1,9 +1,15 @@
+import { Alert } from 'react-native';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { useWorkoutStore } from '@/lib/stores/workout-store';
 import WorkoutScreen from '../workout';
 
 // ワークアウトストアをモック
 jest.mock('@/lib/stores/workout-store');
+
+// expo-routerをモック
+jest.mock('expo-router', () => ({
+  useRouter: () => ({ push: jest.fn() }),
+}));
 
 describe('WorkoutScreen', () => {
   beforeEach(() => {
@@ -140,6 +146,15 @@ describe('WorkoutScreen', () => {
         updateSet: jest.fn(),
         removeSet: jest.fn(),
         toggleSetComplete: jest.fn(),
+      });
+
+      // Alert.alertをモックして「終了」ボタンを自動押下
+      jest.spyOn(Alert, 'alert').mockImplementation((_title, _message, buttons) => {
+        // 「終了」ボタン (2番目) を押す
+        const endButton = buttons?.find((b) => b.text === '終了');
+        if (endButton?.onPress) {
+          endButton.onPress();
+        }
       });
 
       render(<WorkoutScreen />);

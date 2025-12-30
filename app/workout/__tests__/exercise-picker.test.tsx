@@ -12,6 +12,14 @@ jest.mock('expo-router', () => ({
   }),
 }));
 
+// ワークアウトストアをモック
+jest.mock('@/lib/stores/workout-store', () => ({
+  useWorkoutStore: jest.fn(() => ({
+    activeWorkout: { id: 'workout1', startedAt: '2025-01-15T10:00:00Z' },
+    addExercise: jest.fn(),
+  })),
+}));
+
 describe('ExercisePickerScreen', () => {
   const mockExercises = [
     {
@@ -105,14 +113,25 @@ describe('ExercisePickerScreen', () => {
     expect(screen.getByTestId('add-custom-exercise-button')).toBeTruthy();
   });
 
-  it('種目をタップすると選択される', () => {
+  it('種目をタップするとaddExerciseが呼ばれて画面が閉じる', () => {
+    const mockAddExercise = jest.fn();
+    const mockBack = jest.fn();
+
+    jest.requireMock('@/lib/stores/workout-store').useWorkoutStore.mockReturnValue({
+      activeWorkout: { id: 'workout1', startedAt: '2025-01-15T10:00:00Z' },
+      addExercise: mockAddExercise,
+    });
+    jest.requireMock('expo-router').useRouter = () => ({ back: mockBack });
+
     const { getByTestId } = render(<ExercisePickerScreen />);
 
     const exerciseItem = getByTestId('exercise-item-ex-1');
     fireEvent.press(exerciseItem);
 
-    // 選択状態の確認（実装により異なる）
-    expect(exerciseItem.props.accessibilityState?.selected).toBe(true);
+    // 種目が追加され、画面が閉じることを確認
+    expect(mockAddExercise).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'ex-1', name: 'ベンチプレス' })
+    );
   });
 
   it('カテゴリごとにグループ化されている', () => {

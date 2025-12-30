@@ -5,7 +5,7 @@ import DashboardScreen from '../index';
 // モックの設定
 jest.mock('expo-router', () => ({
   useRouter: jest.fn(),
-  useFocusEffect: jest.fn((callback) => callback()),
+  useFocusEffect: jest.fn(),
 }));
 
 jest.mock('@/lib/stores/steps-store', () => ({
