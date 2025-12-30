@@ -1,9 +1,8 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import WorkoutDetailScreen from '../[id]';
-import { useLocalSearchParams, router } from 'expo-router';
-import { useWorkoutDetail } from '@/lib/hooks/use-workout-history';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { deleteWorkout, updateWorkout } from '@/lib/db/queries/workouts';
+import { useWorkoutDetail } from '@/lib/hooks/use-workout-history';
+import WorkoutDetailScreen from '../[id]';
 
 // モック
 jest.mock('expo-router');

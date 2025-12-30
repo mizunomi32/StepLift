@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import TabLayout from '../_layout';
 
@@ -108,7 +107,7 @@ describe('TabLayout', () => {
     };
 
     // 各アイコンが存在することを確認
-    Object.values(expectedIcons).forEach(iconName => {
+    Object.values(expectedIcons).forEach((iconName) => {
       expect(screen.queryByTestId(`icon-${iconName}`)).toBeTruthy();
     });
   });

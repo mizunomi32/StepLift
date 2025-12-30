@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import ExerciseCard from '../ExerciseCard';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import type { Exercise } from '@/types/exercise';
 import type { ActiveWorkoutSet } from '@/types/workout';
+import ExerciseCard from '../ExerciseCard';
 
 describe('ExerciseCard', () => {
   const mockExercise: Exercise = {

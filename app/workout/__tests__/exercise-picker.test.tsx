@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import ExercisePickerScreen from '../exercise-picker';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { getAllExercises } from '@/lib/db/queries/exercises';
+import ExercisePickerScreen from '../exercise-picker';
 
 // データベースクエリをモック
 jest.mock('@/lib/db/queries/exercises');

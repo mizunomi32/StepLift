@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Card } from '@/components/ui/Card';
 
 interface StepStatsProps {

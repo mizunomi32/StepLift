@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import SetRow from '../SetRow';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import type { ActiveWorkoutSet } from '@/types/workout';
+import SetRow from '../SetRow';
 
 describe('SetRow', () => {
   const mockSet: ActiveWorkoutSet = {

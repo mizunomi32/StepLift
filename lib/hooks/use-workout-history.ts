@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { Workout, WorkoutWithSets } from '@/types/workout';
 import { getWorkoutsByDateRange, getWorkoutWithSets } from '@/lib/db/queries/workouts';
+import type { Workout, WorkoutWithSets } from '@/types/workout';
 
 /**
  * 月の最初と最後の日付を取得

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet, useColorScheme, Platform } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { Colors } from '@/constants/colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useState } from 'react';
+import { Platform, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/colors';
 
 interface TimeEditButtonProps {
   /** 表示するラベル（例: "開始時刻", "終了時刻"） */
@@ -64,10 +64,7 @@ export function TimeEditButton({
     <View>
       <Pressable
         onPress={handlePress}
-        style={({ pressed }) => [
-          styles.button,
-          { opacity: pressed ? 0.7 : 1 },
-        ]}
+        style={({ pressed }) => [styles.button, { opacity: pressed ? 0.7 : 1 }]}
         testID={testID}
       >
         <View style={styles.content}>

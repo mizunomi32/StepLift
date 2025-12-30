@@ -1,6 +1,6 @@
 import { create } from 'zustand';
+import { createCustomExercise, getAllExercises } from '@/lib/db/queries/exercises';
 import type { Exercise, ExerciseCategory } from '@/types/exercise';
-import { getAllExercises, createCustomExercise } from '@/lib/db/queries/exercises';
 
 interface ExerciseState {
   exercises: Exercise[];

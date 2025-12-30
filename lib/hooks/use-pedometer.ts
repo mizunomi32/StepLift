@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { Pedometer } from 'expo-sensors';
+import { useEffect, useState } from 'react';
 
 interface UsePedometerResult {
   isPedometerAvailable: boolean;

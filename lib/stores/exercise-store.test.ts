@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
-import { useExerciseStore } from './exercise-store';
-import type { Exercise, ExerciseCategory } from '@/types/exercise';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import * as exerciseQueries from '@/lib/db/queries/exercises';
+import type { Exercise, ExerciseCategory } from '@/types/exercise';
+import { useExerciseStore } from './exercise-store';
 
 // モック
 jest.mock('@/lib/db/queries/exercises');

@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { TodayStepsCard } from '@/components/dashboard/TodayStepsCard';
 import { TodayWorkoutCard } from '@/components/dashboard/TodayWorkoutCard';
 import { WeeklySummaryCard } from '@/components/dashboard/WeeklySummaryCard';
+import { getAverageStepsByDateRange, getStepRecordsByDateRange } from '@/lib/db/queries/steps';
+import { getWorkoutsByDateRange, getWorkoutWithSets } from '@/lib/db/queries/workouts';
 import { useStepsStore } from '@/lib/stores/steps-store';
 import { useWorkoutStore } from '@/lib/stores/workout-store';
-import { calculateWorkoutStreak, calculateStepStreak } from '@/lib/utils/streak';
-import { getWorkoutsByDateRange, getWorkoutWithSets } from '@/lib/db/queries/workouts';
-import { getStepRecordsByDateRange, getAverageStepsByDateRange } from '@/lib/db/queries/steps';
+import { calculateStepStreak, calculateWorkoutStreak } from '@/lib/utils/streak';
 import type { WorkoutWithSets } from '@/types/workout';
-import type { StepRecord } from '@/types/steps';
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -23,18 +22,7 @@ export default function DashboardScreen() {
   const [weeklyWorkoutCount, setWeeklyWorkoutCount] = useState(0);
   const [weeklyAverageSteps, setWeeklyAverageSteps] = useState(0);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, [todaySteps, dailyGoal]);
-
-  // 画面にフォーカスが戻るたびにデータを再読み込み
-  useFocusEffect(
-    useCallback(() => {
-      loadDashboardData();
-    }, [todaySteps, dailyGoal])
-  );
-
-  const loadDashboardData = () => {
+  const loadDashboardData = useCallback(() => {
     try {
       // 今日の日付
       const today = new Date();
@@ -63,7 +51,6 @@ export default function DashboardScreen() {
       setWorkoutStreak(calculateWorkoutStreak(allWorkouts));
 
       // 週間の歩数記録を取得
-      const weeklySteps = getStepRecordsByDateRange(weekAgoStr, todayStr);
       const avgSteps = getAverageStepsByDateRange(weekAgoStr, todayStr);
       setWeeklyAverageSteps(avgSteps);
 
@@ -73,7 +60,18 @@ export default function DashboardScreen() {
     } catch (error) {
       console.error('[Dashboard] データ読み込みエラー:', error);
     }
-  };
+  }, [dailyGoal]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // 画面にフォーカスが戻るたびにデータを再読み込み
+  useFocusEffect(
+    useCallback(() => {
+      loadDashboardData();
+    }, [loadDashboardData])
+  );
 
   const handleStartWorkout = () => {
     startWorkout();

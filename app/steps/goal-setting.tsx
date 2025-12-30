@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { router } from 'expo-router';
-import { useStepsStore } from '@/lib/stores/steps-store';
-import { Card } from '@/components/ui/Card';
+import { useState } from 'react';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { useStepsStore } from '@/lib/stores/steps-store';
 
 const PRESETS = [5000, 8000, 10000, 15000];
 const STEP_INCREMENT = 500;
@@ -22,7 +22,7 @@ export default function GoalSettingScreen() {
   const handleCustomInput = (text: string) => {
     setCustomInput(text);
     const num = parseInt(text, 10);
-    if (!isNaN(num) && num > 0) {
+    if (!Number.isNaN(num) && num > 0) {
       setSelectedGoal(num);
     }
   };
@@ -71,9 +71,7 @@ export default function GoalSettingScreen() {
 
       {/* プリセット */}
       <View className="mb-6">
-        <Text className="text-lg font-semibold text-white mb-3">
-          おすすめの目標
-        </Text>
+        <Text className="text-lg font-semibold text-white mb-3">おすすめの目標</Text>
         <View className="flex-row flex-wrap gap-3">
           {PRESETS.map((preset) => (
             <TouchableOpacity
@@ -101,9 +99,7 @@ export default function GoalSettingScreen() {
 
       {/* カスタム入力 */}
       <View className="mb-6">
-        <Text className="text-lg font-semibold text-white mb-3">
-          カスタム設定
-        </Text>
+        <Text className="text-lg font-semibold text-white mb-3">カスタム設定</Text>
         <Card className="p-4">
           {/* ステッパー */}
           <View className="flex-row items-center justify-between mb-4">

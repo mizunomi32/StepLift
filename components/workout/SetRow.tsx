@@ -1,6 +1,5 @@
-import React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import type { ActiveWorkoutSet } from '@/types/workout';
 
 interface SetRowProps {
@@ -29,7 +28,10 @@ export default function SetRow({ set, onUpdate, onToggleComplete, onRemove }: Se
   };
 
   return (
-    <View testID={`set-row-${set.id}`} className="flex-row items-center py-2 border-b border-gray-800">
+    <View
+      testID={`set-row-${set.id}`}
+      className="flex-row items-center py-2 border-b border-gray-800"
+    >
       {/* セット番号 */}
       <View className="w-12 items-center">
         <Text className="text-gray-400 text-base">{set.setNumber}</Text>

@@ -1,5 +1,5 @@
-import type { Workout } from '@/types/workout';
 import type { StepRecord } from '@/types/steps';
+import type { Workout } from '@/types/workout';
 
 /**
  * 連続トレーニング日数を計算
@@ -38,7 +38,7 @@ export function calculateWorkoutStreak(workouts: Workout[]): number {
 
   // 連続日数をカウント
   let streak = 0;
-  let currentDate = new Date(latestWorkoutDate);
+  const currentDate = new Date(latestWorkoutDate);
 
   for (const workoutDate of workoutDates) {
     const expectedDateStr = currentDate.toISOString().split('T')[0];
@@ -92,7 +92,7 @@ export function calculateStepStreak(records: StepRecord[], goal: number): number
 
   // 連続日数をカウント
   let streak = 0;
-  let currentDate = new Date(latestAchievedDate);
+  const currentDate = new Date(latestAchievedDate);
 
   for (const achievedDate of achievedDates) {
     const expectedDateStr = currentDate.toISOString().split('T')[0];

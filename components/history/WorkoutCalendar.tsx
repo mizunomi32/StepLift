@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, useColorScheme } from 'react-native';
-import type { WorkoutWithSets } from '@/types/workout';
-import { Colors } from '@/constants/colors';
+import { useEffect, useMemo, useState } from 'react';
+import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/colors';
+import type { WorkoutWithSets } from '@/types/workout';
 
 interface WorkoutCalendarProps {
   workouts: WorkoutWithSets[];
@@ -118,19 +118,15 @@ export function WorkoutCalendar({
           })()}
         </Text>
 
-        <Pressable
-          onPress={goToNextMonth}
-          style={styles.monthButton}
-          testID="next-month-button"
-        >
+        <Pressable onPress={goToNextMonth} style={styles.monthButton} testID="next-month-button">
           <IconSymbol name="chevron.right" size={20} color={colors.text} />
         </Pressable>
       </View>
 
       {/* 曜日ヘッダー */}
       <View style={styles.weekDaysRow}>
-        {['日', '月', '火', '水', '木', '金', '土'].map((day, index) => (
-          <View key={index} style={styles.weekDayCell}>
+        {['日', '月', '火', '水', '木', '金', '土'].map((day) => (
+          <View key={day} style={styles.weekDayCell}>
             <Text style={[styles.weekDayText, { color: colors.subtext }]}>{day}</Text>
           </View>
         ))}
@@ -140,6 +136,7 @@ export function WorkoutCalendar({
       <View style={styles.calendarGrid}>
         {calendarDays.map((day, index) => {
           if (day === null) {
+            // biome-ignore lint/suspicious/noArrayIndexKey: Empty cells are static spacers with no identity
             return <View key={`empty-${index}`} style={styles.dayCell} />;
           }
 
@@ -149,24 +146,19 @@ export function WorkoutCalendar({
           return (
             <Pressable
               key={day}
-              style={[
-                styles.dayCell,
-                selected && { backgroundColor: colors.primary },
-              ]}
+              style={[styles.dayCell, selected && { backgroundColor: colors.primary }]}
               onPress={() => handleDayPress(day)}
               testID={`calendar-day-${day}`}
             >
-              <Text
-                style={[
-                  styles.dayText,
-                  { color: selected ? '#FFFFFF' : colors.text },
-                ]}
-              >
+              <Text style={[styles.dayText, { color: selected ? '#FFFFFF' : colors.text }]}>
                 {day}
               </Text>
               {hasWorkout && (
                 <View
-                  style={[styles.workoutDot, { backgroundColor: selected ? '#FFFFFF' : colors.primary }]}
+                  style={[
+                    styles.workoutDot,
+                    { backgroundColor: selected ? '#FFFFFF' : colors.primary },
+                  ]}
                   testID={`workout-dot-${day}`}
                 />
               )}

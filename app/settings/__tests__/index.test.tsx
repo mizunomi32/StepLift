@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import SettingsScreen from '../index';
 
 // ストアをモック

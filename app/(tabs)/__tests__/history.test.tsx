@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import HistoryScreen from '../history';
-import { useHistoryStore } from '@/lib/stores/history-store';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
+import { useHistoryStore } from '@/lib/stores/history-store';
+import HistoryScreen from '../history';
 
 // モック
 jest.mock('@/lib/stores/history-store');

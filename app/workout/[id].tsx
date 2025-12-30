@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  ScrollView,
   ActivityIndicator,
-  Pressable,
   Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
 } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import { Colors } from '@/constants/colors';
-import { useWorkoutDetail } from '@/lib/hooks/use-workout-history';
-import { deleteWorkout, updateWorkout } from '@/lib/db/queries/workouts';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { TimeEditButton } from '@/components/workout/TimeEditButton';
+import { Colors } from '@/constants/colors';
+import { deleteWorkout, updateWorkout } from '@/lib/db/queries/workouts';
+import { useWorkoutDetail } from '@/lib/hooks/use-workout-history';
 
 export default function WorkoutDetailScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
   const colors = Colors[colorScheme];
-
 
   const { id } = useLocalSearchParams<{ id: string }>();
   const { workout, isLoading, error } = useWorkoutDetail(id || '');
@@ -29,32 +28,28 @@ export default function WorkoutDetailScreen() {
 
   // 削除ハンドラ
   const handleDelete = () => {
-    Alert.alert(
-      'ワークアウトを削除',
-      'このワークアウトを削除しますか?',
-      [
-        {
-          text: 'キャンセル',
-          style: 'cancel',
+    Alert.alert('ワークアウトを削除', 'このワークアウトを削除しますか?', [
+      {
+        text: 'キャンセル',
+        style: 'cancel',
+      },
+      {
+        text: '削除',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            setIsDeleting(true);
+            deleteWorkout(id || '');
+            router.back();
+          } catch (err) {
+            console.error('[WorkoutDetail] 削除エラー:', err);
+            Alert.alert('エラー', 'ワークアウトの削除に失敗しました');
+          } finally {
+            setIsDeleting(false);
+          }
         },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              setIsDeleting(true);
-              deleteWorkout(id || '');
-              router.back();
-            } catch (err) {
-              console.error('[WorkoutDetail] 削除エラー:', err);
-              Alert.alert('エラー', 'ワークアウトの削除に失敗しました');
-            } finally {
-              setIsDeleting(false);
-            }
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   // 開始時刻変更ハンドラ
@@ -110,26 +105,27 @@ export default function WorkoutDetailScreen() {
   // 開始・終了時刻
   const startTime = new Date(workout.startedAt);
   const endTime = workout.finishedAt ? new Date(workout.finishedAt) : null;
-  const duration = endTime
-    ? Math.round((endTime.getTime() - startTime.getTime()) / 1000 / 60)
-    : 0;
+  const duration = endTime ? Math.round((endTime.getTime() - startTime.getTime()) / 1000 / 60) : 0;
 
   // 日付表示
   const dateText = `${startTime.getFullYear()}年${startTime.getMonth() + 1}月${startTime.getDate()}日`;
-  const timeText = `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')} - ${endTime ? `${String(endTime.getHours()).padStart(2, '0')}:${String(endTime.getMinutes()).padStart(2, '0')}` : '進行中'}`;
+  const _timeText = `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')} - ${endTime ? `${String(endTime.getHours()).padStart(2, '0')}:${String(endTime.getMinutes()).padStart(2, '0')}` : '進行中'}`;
 
   // 種目ごとにグループ化
-  const exerciseGroups = workout.sets.reduce((acc, set) => {
-    const exerciseId = set.exerciseId;
-    if (!acc[exerciseId]) {
-      acc[exerciseId] = {
-        exercise: set.exercise,
-        sets: [],
-      };
-    }
-    acc[exerciseId].sets.push(set);
-    return acc;
-  }, {} as Record<string, { exercise: any; sets: typeof workout.sets }>);
+  const exerciseGroups = workout.sets.reduce(
+    (acc, set) => {
+      const exerciseId = set.exerciseId;
+      if (!acc[exerciseId]) {
+        acc[exerciseId] = {
+          exercise: set.exercise,
+          sets: [],
+        };
+      }
+      acc[exerciseId].sets.push(set);
+      return acc;
+    },
+    {} as Record<string, { exercise: any; sets: typeof workout.sets }>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -166,9 +162,7 @@ export default function WorkoutDetailScreen() {
           <Card padding="md" style={styles.timeCard}>
             <View style={styles.timeCardHeader}>
               <IconSymbol name="clock" size={20} color={colors.subtext} />
-              <Text style={[styles.durationText, { color: colors.subtext }]}>
-                ({duration}分)
-              </Text>
+              <Text style={[styles.durationText, { color: colors.subtext }]}>({duration}分)</Text>
             </View>
 
             <View style={styles.timeEditors}>
@@ -224,9 +218,7 @@ export default function WorkoutDetailScreen() {
               <IconSymbol name="note.text" size={20} color={colors.subtext} />
               <Text style={[styles.notesTitle, { color: colors.text }]}>メモ</Text>
             </View>
-            <Text style={[styles.notesText, { color: colors.subtext }]}>
-              {workout.notes}
-            </Text>
+            <Text style={[styles.notesText, { color: colors.subtext }]}>{workout.notes}</Text>
           </Card>
         )}
       </ScrollView>

@@ -1,11 +1,10 @@
-import React from 'react';
 import {
+  StyleSheet,
+  Text,
   TextInput,
   type TextInputProps,
-  View,
-  Text,
-  StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native';
 import { Colors } from '@/constants/colors';
 
@@ -29,13 +28,7 @@ interface InputProps extends TextInputProps {
  *
  * ラベル、エラー表示、ヘルパーテキストをサポート
  */
-export function Input({
-  label,
-  error,
-  helperText,
-  style,
-  ...props
-}: InputProps) {
+export function Input({ label, error, helperText, style, ...props }: InputProps) {
   const colorScheme = useColorScheme() ?? 'dark';
   const colors = Colors[colorScheme];
 
@@ -52,19 +45,11 @@ export function Input({
 
   return (
     <View style={styles.container}>
-      {label && (
-        <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-      )}
-      <TextInput
-        {...props}
-        style={[inputStyle, style]}
-        placeholderTextColor={colors.subtext}
-      />
+      {label && <Text style={[styles.label, { color: colors.text }]}>{label}</Text>}
+      <TextInput {...props} style={[inputStyle, style]} placeholderTextColor={colors.subtext} />
       {error && <Text style={styles.error}>{error}</Text>}
       {!error && helperText && (
-        <Text style={[styles.helperText, { color: colors.subtext }]}>
-          {helperText}
-        </Text>
+        <Text style={[styles.helperText, { color: colors.subtext }]}>{helperText}</Text>
       )}
     </View>
   );

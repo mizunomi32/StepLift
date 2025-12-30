@@ -1,4 +1,4 @@
-import type { Exercise, ExerciseRow } from './exercise';
+import type { Exercise } from './exercise';
 
 export interface Workout {
   id: string;
@@ -75,7 +75,9 @@ export function workoutSetFromRow(row: WorkoutSetRow): WorkoutSet {
   };
 }
 
-export function workoutSetWithExerciseFromRow(row: WorkoutSetWithExerciseRow): WorkoutSet & { exercise: Exercise } {
+export function workoutSetWithExerciseFromRow(
+  row: WorkoutSetWithExerciseRow
+): WorkoutSet & { exercise: Exercise } {
   return {
     id: row.id,
     workoutId: row.workout_id,

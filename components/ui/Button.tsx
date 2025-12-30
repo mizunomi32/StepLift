@@ -1,12 +1,11 @@
-import React from 'react';
 import {
+  ActivityIndicator,
   Pressable,
   type PressableProps,
-  Text,
   StyleSheet,
-  ActivityIndicator,
+  Text,
+  useColorScheme,
 } from 'react-native';
-import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -141,10 +140,7 @@ export function Button({
     <Pressable
       {...props}
       disabled={disabled || loading}
-      style={({ pressed }) => [
-        buttonStyle,
-        pressed && !disabled && !loading && styles.pressed,
-      ]}
+      style={({ pressed }) => [buttonStyle, pressed && !disabled && !loading && styles.pressed]}
     >
       {loading ? (
         <ActivityIndicator color={getTextColor()} />

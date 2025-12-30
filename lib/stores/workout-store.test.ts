@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
-import { useWorkoutStore } from './workout-store';
-import type { Exercise } from '@/types/exercise';
-import * as workoutQueries from '@/lib/db/queries/workouts';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import * as setQueries from '@/lib/db/queries/workout-sets';
+import * as workoutQueries from '@/lib/db/queries/workouts';
+import type { Exercise } from '@/types/exercise';
+import { useWorkoutStore } from './workout-store';
 
 // モック
 jest.mock('@/lib/db/queries/workouts');
@@ -26,7 +26,7 @@ describe('useWorkoutStore', () => {
 
   describe('startWorkout', () => {
     it('ワークアウトを開始できる', () => {
-      const { startWorkout, activeWorkout, isWorkoutActive } = useWorkoutStore.getState();
+      const { startWorkout } = useWorkoutStore.getState();
 
       startWorkout();
 
@@ -118,7 +118,7 @@ describe('useWorkoutStore', () => {
       addSet(mockExercise.id);
 
       const state = useWorkoutStore.getState();
-      const setId = state.activeWorkout?.exercises[0].sets[0].id!;
+      const setId = state.activeWorkout!.exercises[0].sets[0].id;
 
       updateSet(mockExercise.id, setId, { weightKg: 100, reps: 10 });
 
@@ -138,7 +138,7 @@ describe('useWorkoutStore', () => {
       addSet(mockExercise.id);
 
       const state = useWorkoutStore.getState();
-      const setId = state.activeWorkout?.exercises[0].sets[0].id!;
+      const setId = state.activeWorkout!.exercises[0].sets[0].id;
 
       removeSet(mockExercise.id, setId);
 
@@ -158,7 +158,7 @@ describe('useWorkoutStore', () => {
       addSet(mockExercise.id);
 
       const state = useWorkoutStore.getState();
-      const setId = state.activeWorkout?.exercises[0].sets[0].id!;
+      const setId = state.activeWorkout!.exercises[0].sets[0].id;
 
       // 完了にする
       toggleSetComplete(mockExercise.id, setId);
@@ -207,7 +207,7 @@ describe('useWorkoutStore', () => {
       addSet(mockExercise.id);
 
       const state = useWorkoutStore.getState();
-      const setId = state.activeWorkout?.exercises[0].sets[0].id!;
+      const setId = state.activeWorkout!.exercises[0].sets[0].id;
       updateSet(mockExercise.id, setId, { weightKg: 100, reps: 10 });
       toggleSetComplete(mockExercise.id, setId);
 

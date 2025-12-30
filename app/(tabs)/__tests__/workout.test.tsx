@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
-import WorkoutScreen from '../workout';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { useWorkoutStore } from '@/lib/stores/workout-store';
+import WorkoutScreen from '../workout';
 
 // ワークアウトストアをモック
 jest.mock('@/lib/stores/workout-store');

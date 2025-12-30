@@ -1,6 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
+import type React from 'react';
+import { StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 interface SettingsSectionProps {
@@ -25,14 +24,7 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
 
   return (
     <View style={styles.container} testID={`settings-section-${title}`}>
-      <Text
-        style={[
-          styles.title,
-          { color: colors.subtext },
-        ]}
-      >
-        {title}
-      </Text>
+      <Text style={[styles.title, { color: colors.subtext }]}>{title}</Text>
       <View
         style={[
           styles.content,

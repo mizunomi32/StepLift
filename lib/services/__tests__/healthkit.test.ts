@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
-import * as healthkit from '../healthkit';
 import AppleHealthKit from 'react-native-health';
+import * as healthkit from '../healthkit';
 
 // モック
 jest.mock('react-native-health');
@@ -17,7 +17,7 @@ describe('HealthKit Service', () => {
 
   describe('requestHealthKitPermissions', () => {
     it('iOSで権限リクエストが成功する', async () => {
-      (AppleHealthKit.initHealthKit as jest.Mock).mockImplementation((permissions, callback) => {
+      (AppleHealthKit.initHealthKit as jest.Mock).mockImplementation((_permissions, callback) => {
         callback(null, true);
       });
 
@@ -28,7 +28,7 @@ describe('HealthKit Service', () => {
     });
 
     it('iOSで権限リクエストが失敗する', async () => {
-      (AppleHealthKit.initHealthKit as jest.Mock).mockImplementation((permissions, callback) => {
+      (AppleHealthKit.initHealthKit as jest.Mock).mockImplementation((_permissions, callback) => {
         callback(new Error('Permission denied'), false);
       });
 
@@ -55,7 +55,7 @@ describe('HealthKit Service', () => {
       jest.useFakeTimers();
       jest.setSystemTime(mockDate);
 
-      (AppleHealthKit.getStepCount as jest.Mock).mockImplementation((options, callback) => {
+      (AppleHealthKit.getStepCount as jest.Mock).mockImplementation((_options, callback) => {
         callback(null, { value: 5000 });
       });
 
@@ -74,7 +74,7 @@ describe('HealthKit Service', () => {
     });
 
     it('エラー時は0を返す', async () => {
-      (AppleHealthKit.getStepCount as jest.Mock).mockImplementation((options, callback) => {
+      (AppleHealthKit.getStepCount as jest.Mock).mockImplementation((_options, callback) => {
         callback(new Error('Failed to get steps'), null);
       });
 
@@ -86,9 +86,7 @@ describe('HealthKit Service', () => {
     it('iOS以外ではエラーを投げる', async () => {
       (Platform as any).OS = 'android';
 
-      await expect(healthkit.getTodaySteps()).rejects.toThrow(
-        'HealthKitはiOSのみで利用可能です'
-      );
+      await expect(healthkit.getTodaySteps()).rejects.toThrow('HealthKitはiOSのみで利用可能です');
 
       (Platform as any).OS = 'ios';
     });
@@ -101,7 +99,7 @@ describe('HealthKit Service', () => {
       jest.setSystemTime(mockDate);
 
       (AppleHealthKit.getDailyStepCountSamples as jest.Mock).mockImplementation(
-        (options, callback) => {
+        (_options, callback) => {
           callback(null, [
             { value: 8000, startDate: '2025-01-14T00:00:00Z', endDate: '2025-01-14T23:59:59Z' },
             { value: 10000, startDate: '2025-01-13T00:00:00Z', endDate: '2025-01-13T23:59:59Z' },
@@ -124,7 +122,7 @@ describe('HealthKit Service', () => {
 
     it('エラー時は空配列を返す', async () => {
       (AppleHealthKit.getDailyStepCountSamples as jest.Mock).mockImplementation(
-        (options, callback) => {
+        (_options, callback) => {
           callback(new Error('Failed to get history'), null);
         }
       );

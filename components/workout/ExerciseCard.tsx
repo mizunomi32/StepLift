@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import type { Exercise } from '@/types/exercise';
 import type { ActiveWorkoutSet } from '@/types/workout';
 import SetRow from './SetRow';
@@ -24,7 +23,10 @@ export default function ExerciseCard({
   onRemoveExercise,
 }: ExerciseCardProps) {
   return (
-    <View testID={`exercise-card-${exercise.id}`} className="bg-gray-900 rounded-lg mb-4 overflow-hidden">
+    <View
+      testID={`exercise-card-${exercise.id}`}
+      className="bg-gray-900 rounded-lg mb-4 overflow-hidden"
+    >
       {/* ヘッダー */}
       <View className="flex-row items-center justify-between px-4 py-3 bg-gray-800">
         <Text className="text-white text-lg font-semibold">{exercise.name}</Text>

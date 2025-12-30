@@ -1,19 +1,8 @@
-import React from 'react';
-import {
-  Text as RNText,
-  type TextProps as RNTextProps,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
+import type React from 'react';
+import { Text as RNText, type TextProps as RNTextProps, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/colors';
 
-export type TextVariant =
-  | 'h1'
-  | 'h2'
-  | 'h3'
-  | 'body'
-  | 'caption'
-  | 'label';
+export type TextVariant = 'h1' | 'h2' | 'h3' | 'body' | 'caption' | 'label';
 
 interface TextProps extends RNTextProps {
   /**

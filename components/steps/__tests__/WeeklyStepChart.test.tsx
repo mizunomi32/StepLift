@@ -1,7 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react-native';
-import { WeeklyStepChart } from '../WeeklyStepChart';
 import type { StepRecord } from '@/types/steps';
+import { WeeklyStepChart } from '../WeeklyStepChart';
 
 describe('WeeklyStepChart', () => {
   const mockRecords: StepRecord[] = [
@@ -35,17 +34,13 @@ describe('WeeklyStepChart', () => {
   ];
 
   it('週間グラフが表示される', () => {
-    const { getByTestId } = render(
-      <WeeklyStepChart records={mockRecords} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={mockRecords} goal={10000} />);
 
     expect(getByTestId('weekly-step-chart')).toBeTruthy();
   });
 
   it('7本の棒グラフが表示される', () => {
-    const { getByTestId } = render(
-      <WeeklyStepChart records={mockRecords} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={mockRecords} goal={10000} />);
 
     // 7日分の棒グラフ
     for (let i = 0; i < 7; i++) {
@@ -54,9 +49,7 @@ describe('WeeklyStepChart', () => {
   });
 
   it('曜日ラベルが表示される', () => {
-    const { getByText } = render(
-      <WeeklyStepChart records={mockRecords} goal={10000} />
-    );
+    const { getByText } = render(<WeeklyStepChart records={mockRecords} goal={10000} />);
 
     expect(getByText('月')).toBeTruthy();
     expect(getByText('火')).toBeTruthy();
@@ -68,25 +61,19 @@ describe('WeeklyStepChart', () => {
   });
 
   it('目標ラインが表示される', () => {
-    const { getByTestId } = render(
-      <WeeklyStepChart records={mockRecords} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={mockRecords} goal={10000} />);
 
     expect(getByTestId('goal-line')).toBeTruthy();
   });
 
   it('空のレコードでもエラーにならない', () => {
-    const { getByTestId } = render(
-      <WeeklyStepChart records={[]} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={[]} goal={10000} />);
 
     expect(getByTestId('weekly-step-chart')).toBeTruthy();
   });
 
   it('目標達成した日は異なる色で表示される', () => {
-    const { getByTestId } = render(
-      <WeeklyStepChart records={mockRecords} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={mockRecords} goal={10000} />);
 
     // 目標達成した日の棒グラフを取得
     const achievedBar = getByTestId('chart-bar-1'); // 12000歩の日
@@ -109,9 +96,7 @@ describe('WeeklyStepChart', () => {
       },
     ];
 
-    const { getByTestId } = render(
-      <WeeklyStepChart records={highRecords} goal={10000} />
-    );
+    const { getByTestId } = render(<WeeklyStepChart records={highRecords} goal={10000} />);
 
     expect(getByTestId('weekly-step-chart')).toBeTruthy();
   });

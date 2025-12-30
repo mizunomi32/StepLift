@@ -1,37 +1,24 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { Colors } from '@/constants/colors';
-import { useHistoryStore } from '@/lib/stores/history-store';
+import { useCallback, useEffect, useMemo } from 'react';
+import { ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { WorkoutCalendar } from '@/components/history/WorkoutCalendar';
 import { WorkoutHistoryItem } from '@/components/history/WorkoutHistoryItem';
+import { Colors } from '@/constants/colors';
+import { useHistoryStore } from '@/lib/stores/history-store';
 
 export default function HistoryScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
   const colors = Colors[colorScheme];
 
-  const {
-    selectedMonth,
-    selectedDate,
-    workouts,
-    setSelectedMonth,
-    setSelectedDate,
-    loadWorkouts,
-  } = useHistoryStore();
+  const { selectedMonth, selectedDate, workouts, setSelectedMonth, setSelectedDate, loadWorkouts } =
+    useHistoryStore();
 
   // 初回レンダリング時に現在月を読み込む
   useEffect(() => {
     const now = new Date();
     const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     loadWorkouts(currentMonth);
-  }, []);
+  }, [loadWorkouts]);
 
   // 画面にフォーカスが戻るたびにデータを再読み込み
   useFocusEffect(
@@ -109,9 +96,7 @@ export default function HistoryScreen() {
 
         {/* セクションヘッダー */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            {selectedDateText}
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{selectedDateText}</Text>
           {filteredWorkouts.length > 0 && (
             <Text style={[styles.workoutCount, { color: colors.subtext }]}>
               {filteredWorkouts.length}件
@@ -123,9 +108,7 @@ export default function HistoryScreen() {
         <View style={styles.workoutList}>
           {filteredWorkouts.length === 0 ? (
             <View style={styles.emptyState}>
-              <Text style={[styles.emptyText, { color: colors.subtext }]}>
-                記録がありません
-              </Text>
+              <Text style={[styles.emptyText, { color: colors.subtext }]}>記録がありません</Text>
             </View>
           ) : (
             filteredWorkouts.map((workout) => (

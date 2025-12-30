@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import GoalSettingScreen from '../goal-setting';
-import { useStepsStore } from '@/lib/stores/steps-store';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
+import { useStepsStore } from '@/lib/stores/steps-store';
+import GoalSettingScreen from '../goal-setting';
 
 // モック
 jest.mock('@/lib/stores/steps-store');

@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import DashboardScreen from '../index';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useRouter } from 'expo-router';
+import DashboardScreen from '../index';
 
 // モックの設定
 jest.mock('expo-router', () => ({

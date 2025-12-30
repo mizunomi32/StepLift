@@ -1,6 +1,5 @@
-import { Card } from '@/components/ui/Card';
-import React from 'react';
 import { Text, View } from 'react-native';
+import { Card } from '@/components/ui/Card';
 
 interface TodayStepsCardProps {
   steps: number;
@@ -41,9 +40,7 @@ export function TodayStepsCard({ steps, goal, streakDays }: TodayStepsCardProps)
       {/* ストリーク表示 */}
       {streakDays > 0 && (
         <View className="mt-2 pt-3 border-t border-gray-800">
-          <Text className="text-sm text-orange-400">
-            🔥 {streakDays}日連続達成中
-          </Text>
+          <Text className="text-sm text-orange-400">🔥 {streakDays}日連続達成中</Text>
         </View>
       )}
     </Card>

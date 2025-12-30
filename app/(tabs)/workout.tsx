@@ -1,12 +1,11 @@
 'use client';
 
-import React from 'react';
-import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useWorkoutStore } from '@/lib/stores/workout-store';
-import WorkoutTimer from '@/components/workout/WorkoutTimer';
+import { useRouter } from 'expo-router';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import ExerciseCard from '@/components/workout/ExerciseCard';
+import WorkoutTimer from '@/components/workout/WorkoutTimer';
+import { useWorkoutStore } from '@/lib/stores/workout-store';
 
 export default function WorkoutScreen() {
   const router = useRouter();
@@ -30,31 +29,27 @@ export default function WorkoutScreen() {
   };
 
   const handleEndWorkout = async () => {
-    Alert.alert(
-      'ワークアウトを終了',
-      '記録を保存してワークアウトを終了しますか?',
-      [
-        {
-          text: 'キャンセル',
-          style: 'cancel',
+    Alert.alert('ワークアウトを終了', '記録を保存してワークアウトを終了しますか?', [
+      {
+        text: 'キャンセル',
+        style: 'cancel',
+      },
+      {
+        text: '終了',
+        style: 'destructive',
+        onPress: async () => {
+          if (process.env.EXPO_OS === 'ios') {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }
+          try {
+            await endWorkout();
+          } catch (error) {
+            console.error('ワークアウト終了エラー:', error);
+            Alert.alert('エラー', 'ワークアウトの終了に失敗しました');
+          }
         },
-        {
-          text: '終了',
-          style: 'destructive',
-          onPress: async () => {
-            if (process.env.EXPO_OS === 'ios') {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }
-            try {
-              await endWorkout();
-            } catch (error) {
-              console.error('ワークアウト終了エラー:', error);
-              Alert.alert('エラー', 'ワークアウトの終了に失敗しました');
-            }
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleAddExercise = () => {

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
 
 const SETTINGS_KEYS = {
   DAILY_STEP_GOAL: 'settings.dailyStepGoal',
@@ -28,7 +28,7 @@ interface SettingsState {
  *
  * アプリの各種設定を管理し、expo-sqlite/kv-storeで永続化する
  */
-export const useSettingsStore = create<SettingsState>((set, get) => ({
+export const useSettingsStore = create<SettingsState>((set, _get) => ({
   // 初期状態
   dailyStepGoal: 10000,
   theme: 'system',

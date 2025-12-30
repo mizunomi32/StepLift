@@ -1,11 +1,4 @@
-export type ExerciseCategory =
-  | 'chest'
-  | 'back'
-  | 'shoulders'
-  | 'arms'
-  | 'legs'
-  | 'core'
-  | 'cardio';
+export type ExerciseCategory = 'chest' | 'back' | 'shoulders' | 'arms' | 'legs' | 'core' | 'cardio';
 
 export interface Exercise {
   id: string;
@@ -36,7 +29,9 @@ export function exerciseFromRow(row: ExerciseRow): Exercise {
 }
 
 // TypeScriptオブジェクトを行データに変換
-export function exerciseToRow(exercise: Omit<Exercise, 'id' | 'createdAt'>): Omit<ExerciseRow, 'id' | 'created_at'> {
+export function exerciseToRow(
+  exercise: Omit<Exercise, 'id' | 'createdAt'>
+): Omit<ExerciseRow, 'id' | 'created_at'> {
   return {
     name: exercise.name,
     category: exercise.category,

@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Card } from '@/components/ui/Card';
 import type { StepRecord } from '@/types/steps';
 
@@ -67,9 +66,7 @@ export function WeeklyStepChart({ records, goal }: WeeklyStepChartProps) {
               >
                 {/* 棒グラフバー */}
                 <View
-                  className={`w-full rounded-t ${
-                    isAchieved ? 'bg-green-500' : 'bg-blue-500'
-                  }`}
+                  className={`w-full rounded-t ${isAchieved ? 'bg-green-500' : 'bg-blue-500'}`}
                   style={{
                     height: Math.max(barHeight, 2), // 最小高さ2px
                   }}

@@ -1,6 +1,6 @@
+import type { StepGoal, StepGoalRow, StepRecord, StepRecordRow, StepSource } from '@/types/steps';
+import { stepGoalFromRow, stepRecordFromRow } from '@/types/steps';
 import { getDatabase } from '../index';
-import type { StepRecord, StepRecordRow, StepGoal, StepGoalRow, StepSource } from '@/types/steps';
-import { stepRecordFromRow, stepGoalFromRow } from '@/types/steps';
 
 /**
  * 歩数記録をupsert (存在すれば更新、なければ挿入)
@@ -133,10 +133,9 @@ export function getStepGoal(): StepGoal | null {
   try {
     const db = getDatabase();
     // デフォルト目標を取得
-    const row = db.getFirstSync<StepGoalRow>(
-      'SELECT * FROM step_goals WHERE id = ?',
-      ['default_goal']
-    );
+    const row = db.getFirstSync<StepGoalRow>('SELECT * FROM step_goals WHERE id = ?', [
+      'default_goal',
+    ]);
     return row ? stepGoalFromRow(row) : null;
   } catch (error) {
     console.error('[Steps] 歩数目標の取得エラー:', error);
@@ -276,7 +275,12 @@ export function getWeeklyStepRecords(): StepRecord[] {
 /**
  * 歩数記録を更新または作成（今日の日付で）
  */
-export function updateOrCreateStepRecord(steps: number, distanceKm?: number | null, calories?: number | null, source: StepSource = 'sensor'): StepRecord {
+export function updateOrCreateStepRecord(
+  steps: number,
+  distanceKm?: number | null,
+  calories?: number | null,
+  source: StepSource = 'sensor'
+): StepRecord {
   const today = new Date().toISOString().split('T')[0];
   return upsertStepRecord({
     date: today,

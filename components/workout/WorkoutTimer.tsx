@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 
 interface WorkoutTimerProps {
   startedAt: string;
@@ -10,7 +10,7 @@ export default function WorkoutTimer({ startedAt }: WorkoutTimerProps) {
 
   useEffect(() => {
     const updateElapsed = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const started = new Date(startedAt).getTime();
       const diff = Math.floor((now - started) / 1000);
       setElapsedSeconds(diff);

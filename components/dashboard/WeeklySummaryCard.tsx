@@ -1,6 +1,5 @@
-import { Card } from '@/components/ui/Card';
-import React from 'react';
 import { Text, View } from 'react-native';
+import { Card } from '@/components/ui/Card';
 
 interface WeeklySummaryCardProps {
   workoutCount: number;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react-native';
 import { StepGoalRing } from '../StepGoalRing';
 
@@ -34,9 +33,7 @@ describe('StepGoalRing', () => {
   });
 
   it('歩数がゼロの場合に正しく表示される', () => {
-    const { getByTestId, getByText } = render(
-      <StepGoalRing currentSteps={0} goalSteps={10000} />
-    );
+    const { getByTestId, getByText } = render(<StepGoalRing currentSteps={0} goalSteps={10000} />);
 
     expect(getByTestId('step-goal-ring')).toBeTruthy();
     expect(getByText('0')).toBeTruthy();
@@ -53,18 +50,14 @@ describe('StepGoalRing', () => {
   });
 
   it('SVG円形プログレスが描画される', () => {
-    const { getByTestId } = render(
-      <StepGoalRing currentSteps={5000} goalSteps={10000} />
-    );
+    const { getByTestId } = render(<StepGoalRing currentSteps={5000} goalSteps={10000} />);
 
     expect(getByTestId('step-goal-ring-background')).toBeTruthy();
     expect(getByTestId('step-goal-ring-progress')).toBeTruthy();
   });
 
   it('達成時に特別なスタイルが適用される', () => {
-    const { getByTestId } = render(
-      <StepGoalRing currentSteps={10000} goalSteps={10000} />
-    );
+    const { getByTestId } = render(<StepGoalRing currentSteps={10000} goalSteps={10000} />);
 
     const container = getByTestId('step-goal-ring');
     expect(container).toBeTruthy();

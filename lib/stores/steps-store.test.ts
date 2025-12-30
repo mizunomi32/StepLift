@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
-import { useStepsStore } from './steps-store';
 import type { StepRecord } from '@/types/steps';
+import { useStepsStore } from './steps-store';
 
 // モック設定
 jest.mock('@/lib/db/queries/steps', () => ({
@@ -22,8 +22,8 @@ jest.mock('@/lib/services/health-connect', () => ({
 }));
 
 import * as stepsQueries from '@/lib/db/queries/steps';
-import * as healthkit from '@/lib/services/healthkit';
 import * as healthConnect from '@/lib/services/health-connect';
+import * as healthkit from '@/lib/services/healthkit';
 
 describe('useStepsStore', () => {
   beforeEach(() => {

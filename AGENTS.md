@@ -102,12 +102,15 @@ npx expo run:ios --device     # iOS実機でビルド
 npx expo run:android          # Androidでビルド
 ```
 
-### Testing
+### Testing & Linting
 
 ```bash
 pnpm test                     # テスト実行
 pnpm test:watch               # ウォッチモード
 pnpm test:coverage            # カバレッジ付き
+pnpm lint                     # Biome lint実行
+pnpm lint:fix                 # 自動修正付きlint
+pnpm format                   # コードフォーマット
 ```
 
 ### Build & Deploy
@@ -129,6 +132,7 @@ pnpm deploy                   # 本番デプロイ
 | データベース | expo-sqlite |
 | HealthKit | react-native-health |
 | テスト | Jest + Testing Library |
+| Linter/Formatter | Biome |
 
 ## Development Guidelines
 

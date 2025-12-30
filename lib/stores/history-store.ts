@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { WorkoutWithSets } from '@/types/workout';
 import { getWorkoutsWithSetsByDateRange } from '@/lib/db/queries/workouts';
+import type { WorkoutWithSets } from '@/types/workout';
 
 interface HistoryState {
   selectedMonth: string;

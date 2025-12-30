@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { useEffect } from 'react';
+import { Text, View } from 'react-native';
+import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
-import Animated, {
-  useSharedValue,
-  useAnimatedProps,
-  withSpring,
-} from 'react-native-reanimated';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -15,11 +11,7 @@ interface StepGoalRingProps {
   size?: number;
 }
 
-export function StepGoalRing({
-  currentSteps,
-  goalSteps,
-  size = 240,
-}: StepGoalRingProps) {
+export function StepGoalRing({ currentSteps, goalSteps, size = 240 }: StepGoalRingProps) {
   const strokeWidth = 20;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -34,7 +26,7 @@ export function StepGoalRing({
       damping: 15,
       stiffness: 80,
     });
-  }, [percentage]);
+  }, [percentage, progress]);
 
   const animatedProps = useAnimatedProps(() => {
     const strokeDashoffset = circumference * (1 - progress.value);
@@ -84,9 +76,7 @@ export function StepGoalRing({
 
       {/* 中央のテキスト */}
       <View className="absolute items-center justify-center">
-        <Text className="text-5xl font-bold text-white">
-          {formatNumber(currentSteps)}
-        </Text>
+        <Text className="text-5xl font-bold text-white">{formatNumber(currentSteps)}</Text>
         <Text className="text-sm text-gray-400 mt-1">歩</Text>
         <Text
           className={`text-2xl font-semibold mt-2 ${

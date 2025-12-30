@@ -1,6 +1,6 @@
-import { calculateWorkoutStreak, calculateStepStreak } from '../streak';
-import type { Workout } from '@/types/workout';
 import type { StepRecord } from '@/types/steps';
+import type { Workout } from '@/types/workout';
+import { calculateStepStreak, calculateWorkoutStreak } from '../streak';
 
 describe('streak.ts', () => {
   describe('calculateWorkoutStreak', () => {

@@ -1,12 +1,9 @@
-import React from 'react';
 import { render } from '@testing-library/react-native';
 import { StepStats } from '../StepStats';
 
 describe('StepStats', () => {
   it('距離とカロリーの両方が表示される', () => {
-    const { getByTestId, getByText } = render(
-      <StepStats distanceKm={8.7} calories={423} />
-    );
+    const { getByTestId, getByText } = render(<StepStats distanceKm={8.7} calories={423} />);
 
     expect(getByTestId('step-stats')).toBeTruthy();
     expect(getByText('8.7 km')).toBeTruthy();
@@ -14,9 +11,7 @@ describe('StepStats', () => {
   });
 
   it('距離がnullの場合は - と表示される', () => {
-    const { getByTestId, getByText } = render(
-      <StepStats distanceKm={null} calories={423} />
-    );
+    const { getByTestId, getByText } = render(<StepStats distanceKm={null} calories={423} />);
 
     expect(getByTestId('step-stats')).toBeTruthy();
     expect(getByText('- km')).toBeTruthy();
@@ -24,9 +19,7 @@ describe('StepStats', () => {
   });
 
   it('カロリーがnullの場合は - と表示される', () => {
-    const { getByTestId, getByText } = render(
-      <StepStats distanceKm={8.7} calories={null} />
-    );
+    const { getByTestId, getByText } = render(<StepStats distanceKm={8.7} calories={null} />);
 
     expect(getByTestId('step-stats')).toBeTruthy();
     expect(getByText('8.7 km')).toBeTruthy();
@@ -34,9 +27,7 @@ describe('StepStats', () => {
   });
 
   it('両方nullの場合に正しく表示される', () => {
-    const { getByTestId, getByText } = render(
-      <StepStats distanceKm={null} calories={null} />
-    );
+    const { getByTestId, getByText } = render(<StepStats distanceKm={null} calories={null} />);
 
     expect(getByTestId('step-stats')).toBeTruthy();
     expect(getByText('- km')).toBeTruthy();
@@ -44,25 +35,19 @@ describe('StepStats', () => {
   });
 
   it('距離が小数点第1位まで表示される', () => {
-    const { getByText } = render(
-      <StepStats distanceKm={8.734} calories={423} />
-    );
+    const { getByText } = render(<StepStats distanceKm={8.734} calories={423} />);
 
     expect(getByText('8.7 km')).toBeTruthy();
   });
 
   it('カロリーが整数で表示される', () => {
-    const { getByText } = render(
-      <StepStats distanceKm={8.7} calories={423.7} />
-    );
+    const { getByText } = render(<StepStats distanceKm={8.7} calories={423.7} />);
 
     expect(getByText('423 kcal')).toBeTruthy();
   });
 
   it('アイコンが表示される', () => {
-    const { getByTestId } = render(
-      <StepStats distanceKm={8.7} calories={423} />
-    );
+    const { getByTestId } = render(<StepStats distanceKm={8.7} calories={423} />);
 
     expect(getByTestId('distance-icon')).toBeTruthy();
     expect(getByTestId('calories-icon')).toBeTruthy();

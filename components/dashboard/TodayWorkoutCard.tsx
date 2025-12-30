@@ -1,8 +1,7 @@
+import { Text, View } from 'react-native';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import type { WorkoutWithSets } from '@/types/workout';
-import React from 'react';
-import { Text, View } from 'react-native';
 
 interface TodayWorkoutCardProps {
   workout: WorkoutWithSets | null;
@@ -25,19 +24,20 @@ export function TodayWorkoutCard({ workout, onStartWorkout }: TodayWorkoutCardPr
   // ワークアウト時間を計算（分単位）
   const durationMinutes = workout.finishedAt
     ? Math.round(
-        (new Date(workout.finishedAt).getTime() - new Date(workout.startedAt).getTime()) /
-          1000 /
-          60
+        (new Date(workout.finishedAt).getTime() - new Date(workout.startedAt).getTime()) / 1000 / 60
       )
     : 0;
 
   // ユニークな種目数を計算
-  const uniqueExercises = workout.sets.reduce((acc, set) => {
-    if (!acc.find((e) => e.id === set.exercise.id)) {
-      acc.push(set.exercise);
-    }
-    return acc;
-  }, [] as typeof workout.sets[0]['exercise'][]);
+  const uniqueExercises = workout.sets.reduce(
+    (acc, set) => {
+      if (!acc.find((e) => e.id === set.exercise.id)) {
+        acc.push(set.exercise);
+      }
+      return acc;
+    },
+    [] as (typeof workout.sets)[0]['exercise'][]
+  );
 
   const exerciseCount = uniqueExercises.length;
   const setCount = workout.sets.length;
@@ -58,7 +58,9 @@ export function TodayWorkoutCard({ workout, onStartWorkout }: TodayWorkoutCardPr
 
         <View className="flex-row items-center">
           <Text className="text-gray-400 text-sm mr-2">💪</Text>
-          <Text className="text-white">{exerciseCount}種目 • {setCount}セット</Text>
+          <Text className="text-white">
+            {exerciseCount}種目 • {setCount}セット
+          </Text>
         </View>
 
         <View className="flex-row items-center">

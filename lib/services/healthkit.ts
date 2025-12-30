@@ -7,7 +7,7 @@ let permissions: any = null;
 
 try {
   AppleHealthKit = require('react-native-health').default;
-  if (AppleHealthKit && AppleHealthKit.Constants) {
+  if (AppleHealthKit?.Constants) {
     permissions = {
       permissions: {
         read: [AppleHealthKit.Constants.Permissions.StepCount],
@@ -15,7 +15,7 @@ try {
       },
     };
   }
-} catch (error) {
+} catch (_error) {
   // Expo Goやモジュールが利用できない環境では何もしない
   console.log('[HealthKit] react-native-healthモジュールが利用できません');
 }
@@ -71,20 +71,17 @@ export async function getTodaySteps(): Promise<number> {
       endDate: now.toISOString(),
     };
 
-    AppleHealthKit.getStepCount(
-      options,
-      (error: Object, results: any) => {
-        if (error) {
-          console.error('[HealthKit] 今日の歩数取得エラー:', error);
-          resolve(0);
-          return;
-        }
-
-        const steps = results?.value ?? 0;
-        console.log('[HealthKit] 今日の歩数を取得:', steps);
-        resolve(steps);
+    AppleHealthKit.getStepCount(options, (error: unknown, results: any) => {
+      if (error) {
+        console.error('[HealthKit] 今日の歩数取得エラー:', error);
+        resolve(0);
+        return;
       }
-    );
+
+      const steps = results?.value ?? 0;
+      console.log('[HealthKit] 今日の歩数を取得:', steps);
+      resolve(steps);
+    });
   });
 }
 
@@ -113,37 +110,34 @@ export async function getStepHistory(days: number): Promise<StepRecord[]> {
       endDate: now.toISOString(),
     };
 
-    AppleHealthKit.getDailyStepCountSamples(
-      options,
-      (error: Object, results: any[]) => {
-        if (error) {
-          console.error('[HealthKit] 歩数履歴取得エラー:', error);
-          resolve([]);
-          return;
-        }
-
-        if (!results || results.length === 0) {
-          console.log('[HealthKit] 歩数履歴が見つかりません');
-          resolve([]);
-          return;
-        }
-
-        const stepRecords: StepRecord[] = results.map((sample) => {
-          const sampleDate = new Date(sample.startDate);
-          const dateStr = sampleDate.toISOString().split('T')[0];
-
-          return {
-            date: dateStr,
-            steps: sample.value,
-            source: 'healthkit' as const,
-            deviceName: null,
-            createdAt: new Date().toISOString(),
-          };
-        });
-
-        console.log('[HealthKit] 歩数履歴を取得:', stepRecords.length, '件');
-        resolve(stepRecords);
+    AppleHealthKit.getDailyStepCountSamples(options, (error: unknown, results: any[]) => {
+      if (error) {
+        console.error('[HealthKit] 歩数履歴取得エラー:', error);
+        resolve([]);
+        return;
       }
-    );
+
+      if (!results || results.length === 0) {
+        console.log('[HealthKit] 歩数履歴が見つかりません');
+        resolve([]);
+        return;
+      }
+
+      const stepRecords: StepRecord[] = results.map((sample) => {
+        const sampleDate = new Date(sample.startDate);
+        const dateStr = sampleDate.toISOString().split('T')[0];
+
+        return {
+          date: dateStr,
+          steps: sample.value,
+          source: 'healthkit' as const,
+          deviceName: null,
+          createdAt: new Date().toISOString(),
+        };
+      });
+
+      console.log('[HealthKit] 歩数履歴を取得:', stepRecords.length, '件');
+      resolve(stepRecords);
+    });
   });
 }

@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { usePedometer } from '../../../lib/hooks/use-pedometer';
+import { act, renderHook } from '@testing-library/react';
 import { Pedometer } from 'expo-sensors';
+import { usePedometer } from '../../../lib/hooks/use-pedometer';
 
 // モック設定
 jest.mock('expo-sensors', () => ({
@@ -37,7 +37,7 @@ describe('usePedometer', () => {
       const { result } = renderHook(() => usePedometer());
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       expect(result.current.isPedometerAvailable).toBe(true);
@@ -56,7 +56,7 @@ describe('usePedometer', () => {
       const { result } = renderHook(() => usePedometer(onStepUpdate));
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       // 歩数更新をシミュレート
@@ -84,7 +84,7 @@ describe('usePedometer', () => {
       const { result } = renderHook(() => usePedometer());
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       expect(result.current.isPedometerAvailable).toBe(false);
@@ -103,7 +103,7 @@ describe('usePedometer', () => {
       const { unmount } = renderHook(() => usePedometer());
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       unmount();
@@ -119,7 +119,7 @@ describe('usePedometer', () => {
       const { result } = renderHook(() => usePedometer());
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       expect(result.current.isPedometerAvailable).toBe(false);

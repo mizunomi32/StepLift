@@ -12,7 +12,7 @@ global.Appearance = {
 };
 
 // Global addEventListener
-global.addEventListener = jest.fn((event, handler) => ({
+global.addEventListener = jest.fn((_event, _handler) => ({
   remove: jest.fn(),
 }));
 global.removeEventListener = jest.fn();
@@ -72,7 +72,7 @@ jest.mock('react-native', () => ({
       Mixin: jest.fn(),
     },
   },
-  addEventListener: jest.fn((event, handler) => ({
+  addEventListener: jest.fn((_event, _handler) => ({
     remove: jest.fn(),
   })),
 }));
@@ -94,7 +94,7 @@ jest.mock('react-native-reanimated', () => ({
     createAnimatedComponent: jest.fn((component) => component),
   },
   useSharedValue: jest.fn((value) => ({ value })),
-  useAnimatedProps: jest.fn((callback) => ({})),
+  useAnimatedProps: jest.fn((_callback) => ({})),
   withSpring: jest.fn((value) => value),
   createAnimatedComponent: jest.fn((component) => component),
 }));

@@ -1,7 +1,6 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
-import { TodayWorkoutCard } from '../TodayWorkoutCard';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import type { WorkoutWithSets } from '@/types/workout';
+import { TodayWorkoutCard } from '../TodayWorkoutCard';
 
 describe('TodayWorkoutCard', () => {
   const mockOnStartWorkout = jest.fn();

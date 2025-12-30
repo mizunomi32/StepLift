@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, SectionList } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useMemo, useState } from 'react';
+import { Pressable, SectionList, Text, TextInput, View } from 'react-native';
 import { getAllExercises } from '@/lib/db/queries/exercises';
 import { useWorkoutStore } from '@/lib/stores/workout-store';
 import type { Exercise, ExerciseCategory } from '@/types/exercise';
@@ -37,13 +37,19 @@ export default function ExercisePickerScreen() {
     }
 
     const query = searchQuery.toLowerCase().trim();
-    return allExercises.filter((exercise) =>
-      exercise.name.toLowerCase().includes(query)
-    );
+    return allExercises.filter((exercise) => exercise.name.toLowerCase().includes(query));
   }, [allExercises, searchQuery]);
 
   const exercisesByCategory = useMemo(() => {
-    const categories: ExerciseCategory[] = ['chest', 'back', 'shoulders', 'arms', 'legs', 'core', 'cardio'];
+    const categories: ExerciseCategory[] = [
+      'chest',
+      'back',
+      'shoulders',
+      'arms',
+      'legs',
+      'core',
+      'cardio',
+    ];
     return categories
       .map((category) => ({
         title: CATEGORY_LABELS[category],
@@ -90,10 +96,7 @@ export default function ExercisePickerScreen() {
         sections={exercisesByCategory}
         keyExtractor={(item) => item.id}
         renderSectionHeader={({ section }) => (
-          <View
-            testID={`category-section-${section.category}`}
-            className="px-6 py-3 bg-gray-900"
-          >
+          <View testID={`category-section-${section.category}`} className="px-6 py-3 bg-gray-900">
             <Text className="text-white font-semibold text-base">{section.title}</Text>
           </View>
         )}

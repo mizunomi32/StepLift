@@ -5,10 +5,10 @@
  * アプリから手動でimportして実行することで、データベースの動作を確認できます。
  */
 
-import { initializeDatabase, getDatabase } from './index';
+import { getDatabase, initializeDatabase } from './index';
+import { getMigrationStatus } from './migrations';
 import { getAllExercises, getPresetExerciseCount } from './queries/exercises';
 import { getStepGoal } from './queries/steps';
-import { getMigrationStatus } from './migrations';
 
 export function testDatabaseInitialization() {
   console.log('=== データベース初期化テスト開始 ===');

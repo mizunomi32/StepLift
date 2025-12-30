@@ -1,7 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react-native';
-import { SettingsSection } from '../SettingsSection';
 import { Text } from 'react-native';
+import { SettingsSection } from '../SettingsSection';
 
 describe('SettingsSection', () => {
   it('タイトルを表示する', () => {

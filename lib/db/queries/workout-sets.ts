@@ -1,6 +1,6 @@
-import { getDatabase } from '../index';
 import type { WorkoutSet, WorkoutSetRow } from '@/types/workout';
 import { workoutSetFromRow } from '@/types/workout';
+import { getDatabase } from '../index';
 
 /**
  * セットを追加

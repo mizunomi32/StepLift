@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react-native';
-import StepsScreen from '../steps';
 import { useStepsStore } from '@/lib/stores/steps-store';
+import StepsScreen from '../steps';
 
 // Zustandストアのモック
 jest.mock('@/lib/stores/steps-store');

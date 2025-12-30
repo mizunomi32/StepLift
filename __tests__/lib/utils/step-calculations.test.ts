@@ -1,9 +1,9 @@
 import {
-  estimateStrideLength,
-  calculateDistance,
   calculateCalories,
-  getWeekDates,
+  calculateDistance,
+  estimateStrideLength,
   formatDate,
+  getWeekDates,
 } from '../../../lib/utils/step-calculations';
 
 describe('step-calculations', () => {
@@ -52,7 +52,7 @@ describe('step-calculations', () => {
       expect(dates).toHaveLength(7);
 
       // 日付がYYYY-MM-DD形式であることを確認
-      dates.forEach(date => {
+      dates.forEach((date) => {
         expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       });
 

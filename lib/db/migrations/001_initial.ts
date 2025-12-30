@@ -1,6 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
-import { ALL_TABLE_SCHEMAS } from '../schema';
 import { PRESET_EXERCISES } from '@/constants/exercises';
+import { ALL_TABLE_SCHEMAS } from '../schema';
 
 /**
  * マイグレーション001: 初期セットアップ

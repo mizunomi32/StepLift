@@ -1,15 +1,15 @@
-import { create } from 'zustand';
 import { Platform } from 'react-native';
-import type { StepRecord } from '@/types/steps';
+import { create } from 'zustand';
 import {
+  updateStepGoal as dbUpdateStepGoal,
   getTodaySteps as getDbTodaySteps,
   getStepGoal,
   getWeeklyStepRecords,
   updateOrCreateStepRecord,
-  updateStepGoal as dbUpdateStepGoal,
 } from '@/lib/db/queries/steps';
-import * as healthkit from '@/lib/services/healthkit';
 import * as healthConnect from '@/lib/services/health-connect';
+import * as healthkit from '@/lib/services/healthkit';
+import type { StepRecord } from '@/types/steps';
 
 interface StepsState {
   // 状態
@@ -27,7 +27,7 @@ interface StepsState {
   syncWithHealthAPI: () => Promise<void>;
 }
 
-export const useStepsStore = create<StepsState>((set, get) => ({
+export const useStepsStore = create<StepsState>((set, _get) => ({
   // 初期状態
   todaySteps: 0,
   dailyGoal: 10000,
@@ -143,7 +143,12 @@ export const useStepsStore = create<StepsState>((set, get) => ({
 
       if (steps > 0) {
         set({ todaySteps: steps });
-        updateOrCreateStepRecord(steps, null, null, Platform.OS === 'ios' ? 'healthkit' : 'health_connect');
+        updateOrCreateStepRecord(
+          steps,
+          null,
+          null,
+          Platform.OS === 'ios' ? 'healthkit' : 'health_connect'
+        );
       }
     } catch (error) {
       console.error('[StepsStore] ヘルスAPI同期エラー:', error);

@@ -1,6 +1,6 @@
-import { getDatabase } from '../index';
-import type { Exercise, ExerciseRow, ExerciseCategory } from '@/types/exercise';
+import type { Exercise, ExerciseCategory, ExerciseRow } from '@/types/exercise';
 import { exerciseFromRow } from '@/types/exercise';
+import { getDatabase } from '../index';
 
 /**
  * すべての種目を取得
@@ -76,7 +76,10 @@ export function createCustomExercise(exercise: Omit<Exercise, 'id' | 'createdAt'
 /**
  * 種目を更新
  */
-export function updateExercise(id: string, updates: Partial<Omit<Exercise, 'id' | 'createdAt'>>): Exercise {
+export function updateExercise(
+  id: string,
+  updates: Partial<Omit<Exercise, 'id' | 'createdAt'>>
+): Exercise {
   try {
     const db = getDatabase();
 
@@ -151,7 +154,9 @@ export function deleteCustomExercise(id: string): boolean {
 export function getPresetExerciseCount(): number {
   try {
     const db = getDatabase();
-    const result = db.getFirstSync<{ count: number }>('SELECT COUNT(*) as count FROM exercises WHERE is_custom = 0');
+    const result = db.getFirstSync<{ count: number }>(
+      'SELECT COUNT(*) as count FROM exercises WHERE is_custom = 0'
+    );
     return result?.count ?? 0;
   } catch (error) {
     console.error('[Exercises] プリセット種目数の取得エラー:', error);
@@ -165,7 +170,9 @@ export function getPresetExerciseCount(): number {
 export function getCustomExerciseCount(): number {
   try {
     const db = getDatabase();
-    const result = db.getFirstSync<{ count: number }>('SELECT COUNT(*) as count FROM exercises WHERE is_custom = 1');
+    const result = db.getFirstSync<{ count: number }>(
+      'SELECT COUNT(*) as count FROM exercises WHERE is_custom = 1'
+    );
     return result?.count ?? 0;
   } catch (error) {
     console.error('[Exercises] カスタム種目数の取得エラー:', error);

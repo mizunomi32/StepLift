@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Alert,
-  Switch,
-  Platform,
-  Share,
-} from 'react-native';
-import { useColorScheme } from 'react-native';
+import Constants from 'expo-constants';
 import { Stack } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Switch,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
+import { SettingsItem } from '@/components/settings/SettingsItem';
+import { SettingsSection } from '@/components/settings/SettingsSection';
 import { Colors } from '@/constants/colors';
+import * as healthkit from '@/lib/services/healthkit';
 import { useSettingsStore } from '@/lib/stores/settings-store';
 import { useStepsStore } from '@/lib/stores/steps-store';
-import { SettingsSection } from '@/components/settings/SettingsSection';
-import { SettingsItem } from '@/components/settings/SettingsItem';
-import { Button } from '@/components/ui/button';
-import Constants from 'expo-constants';
-import * as healthkit from '@/lib/services/healthkit';
 
 /**
  * 設定画面
@@ -60,7 +59,7 @@ export default function SettingsScreen() {
           onPress: async (value) => {
             if (value) {
               const steps = parseInt(value, 10);
-              if (!isNaN(steps) && steps > 0) {
+              if (!Number.isNaN(steps) && steps > 0) {
                 await setDailyStepGoal(steps);
               }
             }
@@ -74,25 +73,21 @@ export default function SettingsScreen() {
 
   // テーマの変更ダイアログを表示
   const handleThemePress = () => {
-    Alert.alert(
-      'テーマ',
-      'テーマを選択してください',
-      [
-        {
-          text: 'ライト',
-          onPress: () => setTheme('light'),
-        },
-        {
-          text: 'ダーク',
-          onPress: () => setTheme('dark'),
-        },
-        {
-          text: 'システム',
-          onPress: () => setTheme('system'),
-        },
-        { text: 'キャンセル', style: 'cancel' },
-      ]
-    );
+    Alert.alert('テーマ', 'テーマを選択してください', [
+      {
+        text: 'ライト',
+        onPress: () => setTheme('light'),
+      },
+      {
+        text: 'ダーク',
+        onPress: () => setTheme('dark'),
+      },
+      {
+        text: 'システム',
+        onPress: () => setTheme('system'),
+      },
+      { text: 'キャンセル', style: 'cancel' },
+    ]);
   };
 
   // 重量単位のトグル
@@ -188,10 +183,7 @@ export default function SettingsScreen() {
         setIsHealthConnected(true);
         // 歩数データを同期
         await syncWithHealthAPI();
-        Alert.alert(
-          '成功',
-          'HealthKitと連携しました。歩数データが自動的に同期されます。'
-        );
+        Alert.alert('成功', 'HealthKitと連携しました。歩数データが自動的に同期されます。');
       } else {
         Alert.alert('エラー', 'HealthKitの権限が許可されませんでした');
       }
@@ -206,21 +198,17 @@ export default function SettingsScreen() {
 
   // ヘルス連携の解除
   const handleDisconnectHealth = () => {
-    Alert.alert(
-      'ヘルス連携を解除',
-      'ヘルス連携を解除しますか？',
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: '解除',
-          style: 'destructive',
-          onPress: () => {
-            setIsHealthConnected(false);
-            Alert.alert('成功', 'ヘルス連携を解除しました');
-          },
+    Alert.alert('ヘルス連携を解除', 'ヘルス連携を解除しますか？', [
+      { text: 'キャンセル', style: 'cancel' },
+      {
+        text: '解除',
+        style: 'destructive',
+        onPress: () => {
+          setIsHealthConnected(false);
+          Alert.alert('成功', 'ヘルス連携を解除しました');
         },
-      ]
-    );
+      },
+    ]);
   };
 
   // テーマの表示名を取得
@@ -264,18 +252,12 @@ export default function SettingsScreen() {
 
         {/* 表示セクション */}
         <SettingsSection title="表示">
-          <SettingsItem
-            label="テーマ"
-            value={getThemeLabel()}
-            onPress={handleThemePress}
-          />
+          <SettingsItem label="テーマ" value={getThemeLabel()} onPress={handleThemePress} />
           <SettingsItem
             label="重量単位"
             rightElement={
               <View style={styles.switchContainer}>
-                <Text style={[styles.unitLabel, { color: colors.subtext }]}>
-                  kg
-                </Text>
+                <Text style={[styles.unitLabel, { color: colors.subtext }]}>kg</Text>
                 <Switch
                   value={weightUnit === 'lb'}
                   onValueChange={handleWeightUnitToggle}
@@ -285,9 +267,7 @@ export default function SettingsScreen() {
                   }}
                   thumbColor="#FFFFFF"
                 />
-                <Text style={[styles.unitLabel, { color: colors.subtext }]}>
-                  lb
-                </Text>
+                <Text style={[styles.unitLabel, { color: colors.subtext }]}>lb</Text>
               </View>
             }
             isLast
@@ -297,11 +277,7 @@ export default function SettingsScreen() {
         {/* データセクション */}
         <SettingsSection title="データ">
           <SettingsItem label="エクスポート" onPress={handleExport} />
-          <SettingsItem
-            label="データを削除"
-            onPress={handleDeleteData}
-            isLast
-          />
+          <SettingsItem label="データを削除" onPress={handleDeleteData} isLast />
         </SettingsSection>
 
         {/* ヘルス連携セクション */}
@@ -316,16 +292,9 @@ export default function SettingsScreen() {
 
         {/* アプリについてセクション */}
         <SettingsSection title="アプリについて">
-          <SettingsItem
-            label="バージョン"
-            value={Constants.expoConfig?.version || '1.0.0'}
-          />
+          <SettingsItem label="バージョン" value={Constants.expoConfig?.version || '1.0.0'} />
           <SettingsItem label="ライセンス" onPress={() => {}} />
-          <SettingsItem
-            label="プライバシーポリシー"
-            onPress={() => {}}
-            isLast
-          />
+          <SettingsItem label="プライバシーポリシー" onPress={() => {}} isLast />
         </SettingsSection>
       </ScrollView>
     </>

@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
-import { View, Text, Pressable, StyleSheet, useColorScheme } from 'react-native';
-import type { WorkoutWithSets } from '@/types/workout';
-import { Colors } from '@/constants/colors';
+import { useMemo } from 'react';
+import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { Card } from '@/components/ui/Card';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/colors';
+import type { WorkoutWithSets } from '@/types/workout';
 
 interface WorkoutHistoryItemProps {
   workout: WorkoutWithSets;
@@ -62,9 +62,7 @@ export function WorkoutHistoryItem({ workout, onPress }: WorkoutHistoryItemProps
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        { opacity: pressed ? 0.7 : 1 },
-      ]}
+      style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
       testID="workout-history-item"
     >
       <Card padding="md" style={styles.container}>
@@ -75,9 +73,7 @@ export function WorkoutHistoryItem({ workout, onPress }: WorkoutHistoryItemProps
 
           <View style={styles.contentContainer}>
             <View style={styles.topRow}>
-              <Text style={[styles.timeText, { color: colors.text }]}>
-                {startTime}
-              </Text>
+              <Text style={[styles.timeText, { color: colors.text }]}>{startTime}</Text>
               <IconSymbol name="chevron.right" size={16} color={colors.subtext} />
             </View>
 

@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import { runMigrations, getMigrationStatus } from './migrations';
+import { getMigrationStatus, runMigrations } from './migrations';
 
 /**
  * データベースインスタンス

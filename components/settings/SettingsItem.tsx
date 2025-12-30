@@ -1,6 +1,5 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
+import type React from 'react';
+import { Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 interface SettingsItemProps {
@@ -67,9 +66,7 @@ export function SettingsItem({
     return (
       <Pressable
         onPress={onPress}
-        style={({ pressed }) => [
-          pressed && { opacity: 0.7 },
-        ]}
+        style={({ pressed }) => [pressed && { opacity: 0.7 }]}
         testID={`settings-item-${label}`}
       >
         {content}

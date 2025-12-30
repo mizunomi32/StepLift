@@ -1,6 +1,6 @@
-import { renderHook, act, waitFor } from '@testing-library/react-native';
-import { useHistoryStore } from '../history-store';
+import { act, renderHook } from '@testing-library/react-native';
 import { getWorkoutsByDateRange } from '@/lib/db/queries/workouts';
+import { useHistoryStore } from '../history-store';
 
 // モック
 jest.mock('@/lib/db/queries/workouts');

@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, type ViewProps, StyleSheet, useColorScheme } from 'react-native';
+import type React from 'react';
+import { useColorScheme, View, type ViewProps } from 'react-native';
 import { Colors } from '@/constants/colors';
 
 interface CardProps extends ViewProps {
