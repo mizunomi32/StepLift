@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import type { ActiveWorkoutSet } from '@/types/workout';
 
@@ -32,7 +32,7 @@ export default function SetRow({ set, onUpdate, onToggleComplete, onRemove }: Se
     <View testID={`set-row-${set.id}`} className="flex-row items-center py-2 border-b border-gray-800">
       {/* セット番号 */}
       <View className="w-12 items-center">
-        <View className="text-gray-400 text-base">{set.setNumber}</View>
+        <Text className="text-gray-400 text-base">{set.setNumber}</Text>
       </View>
 
       {/* 重量入力 */}
@@ -74,7 +74,7 @@ export default function SetRow({ set, onUpdate, onToggleComplete, onRemove }: Se
             set.isCompleted ? 'bg-blue-500 border-blue-500' : 'border-gray-600'
           }`}
         >
-          {set.isCompleted && <View className="text-white text-sm">✓</View>}
+          {set.isCompleted && <Text className="text-white text-sm">✓</Text>}
         </View>
       </Pressable>
 
@@ -84,7 +84,7 @@ export default function SetRow({ set, onUpdate, onToggleComplete, onRemove }: Se
         onPress={onRemove}
         className="w-12 h-12 items-center justify-center"
       >
-        <View className="text-red-500 text-lg">×</View>
+        <Text className="text-red-500 text-lg">×</Text>
       </Pressable>
     </View>
   );

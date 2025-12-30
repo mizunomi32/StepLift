@@ -1,5 +1,8 @@
 // Jest setup file
 
+// Mock Expo import.meta registry
+global.__ExpoImportMetaRegistry = new Map();
+
 // Global setup for NativeWind/React Native
 global.Appearance = {
   getColorScheme: () => 'dark',
@@ -7,6 +10,12 @@ global.Appearance = {
   removeChangeListener: () => {},
   addEventListener: () => ({ remove: () => {} }),
 };
+
+// Global addEventListener
+global.addEventListener = jest.fn((event, handler) => ({
+  remove: jest.fn(),
+}));
+global.removeEventListener = jest.fn();
 
 // Mock nativewind
 jest.mock('react-native-css-interop', () => ({
@@ -20,6 +29,18 @@ jest.mock('expo-sqlite', () => ({
     runSync: jest.fn(),
     getFirstSync: jest.fn(),
     getAllSync: jest.fn(),
+  })),
+}));
+
+// Mock expo-sqlite/kv-store
+const mockKvStore = new Map();
+jest.mock('expo-sqlite/kv-store', () => ({
+  openDatabaseSync: jest.fn(() => ({
+    get: jest.fn((key) => mockKvStore.get(key)),
+    set: jest.fn((key, value) => mockKvStore.set(key, value)),
+    delete: jest.fn((key) => mockKvStore.delete(key)),
+    clear: jest.fn(() => mockKvStore.clear()),
+    getAllKeys: jest.fn(() => Array.from(mockKvStore.keys())),
   })),
 }));
 
@@ -76,4 +97,30 @@ jest.mock('react-native-reanimated', () => ({
   useAnimatedProps: jest.fn((callback) => ({})),
   withSpring: jest.fn((value) => value),
   createAnimatedComponent: jest.fn((component) => component),
+}));
+
+// Mock Expo modules
+jest.mock('expo', () => ({
+  __esModule: true,
+}));
+
+// Mock expo-constants
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: {
+    expoConfig: {
+      version: '1.0.0',
+    },
+  },
+}));
+
+// Mock DB queries
+jest.mock('@/lib/db/queries/workouts', () => ({
+  getWorkoutsByDateRange: jest.fn(() => []),
+  getWorkoutWithSets: jest.fn(() => null),
+}));
+
+jest.mock('@/lib/db/queries/steps', () => ({
+  getStepRecordsByDateRange: jest.fn(() => []),
+  getAverageStepsByDateRange: jest.fn(() => 0),
 }));

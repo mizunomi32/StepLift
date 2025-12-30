@@ -1,9 +1,5 @@
 module.exports = {
   preset: 'jest-expo',
-  testEnvironment: 'node',
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-  },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
@@ -11,7 +7,11 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.(ts|tsx|js)'],
   collectCoverageFrom: [
     'lib/**/*.{ts,tsx}',
+    'components/**/*.{ts,tsx}',
+    'app/**/*.{ts,tsx}',
     '!lib/**/*.d.ts',
     '!lib/**/*.test.{ts,tsx}',
+    '!components/**/*.test.{ts,tsx}',
+    '!app/**/*.test.{ts,tsx}',
   ],
 };

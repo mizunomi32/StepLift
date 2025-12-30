@@ -10,7 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mz32.appStepLift"
+      "bundleIdentifier": "club.3can.appStepLift",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "StepLiftはあなたの歩数データを読み取り、日々の活動を記録します。",
+        "NSHealthUpdateUsageDescription": "StepLiftはあなたの歩数データを保存します。",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +26,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.mz32.appStepLift"
+      "package": "club.3can.appStepLift"
     },
     "web": {
       "output": "static",

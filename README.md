@@ -1,65 +1,134 @@
-# Welcome to your Expo app 👋
+# StepLift
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+筋トレのワークアウト記録と歩数計を統合したフィットネスアプリ
 
-## Get started
+## 概要
 
-To start the app, in your terminal run:
+StepLiftは、日々のトレーニングと活動量を一元管理できるモバイルアプリです。ジムでのワークアウト記録と歩数トラッキングを組み合わせ、フィットネス目標の達成をサポートします。
 
-```bash
-npm run start
-```
+## 主な機能
 
-In the output, you'll find options to open the app in:
+- **ワークアウト記録**: 種目・重量・回数をセット単位で記録
+- **歩数トラッキング**: HealthKit/Health Connect連携で自動計測
+- **進捗ダッシュボード**: 今日のサマリー、週間グラフ、ストリーク表示
+- **履歴管理**: 過去のワークアウトと歩数履歴を閲覧
 
-- [a development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [an Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [an iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 技術スタック
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **フレームワーク**: Expo SDK 54 / React Native
+- **ナビゲーション**: Expo Router (ファイルベースルーティング)
+- **スタイリング**: NativeWind (Tailwind CSS)
+- **状態管理**: Zustand
+- **データベース**: expo-sqlite
+- **ヘルスAPI**: react-native-health (iOS HealthKit)
 
-## Workflows
+## 開発環境のセットアップ
 
-This project is configured to use [EAS Workflows](https://docs.expo.dev/eas/workflows/get-started/) to automate some development and release processes. These commands are set up in [`package.json`](./package.json) and can be run using NPM scripts in your terminal.
+### 必要条件
 
-### Previews
+- Node.js 18以上
+- pnpm (推奨) または npm
+- Xcode (iOS開発の場合)
+- Android Studio (Android開発の場合)
 
-Run `npm run draft` to [publish a preview update](https://docs.expo.dev/eas/workflows/examples/publish-preview-update/) of your project, which can be viewed in Expo Go or in a development build.
-
-### Development Builds
-
-Run `npm run development-builds` to [create a development build](https://docs.expo.dev/eas/workflows/examples/create-development-builds/). Note - you'll need to follow the [Prerequisites](https://docs.expo.dev/eas/workflows/examples/create-development-builds/#prerequisites) to ensure you have the correct emulator setup on your machine.
-
-### Production Deployments
-
-Run `npm run deploy` to [deploy to production](https://docs.expo.dev/eas/workflows/examples/deploy-to-production/). Note - you'll need to follow the [Prerequisites](https://docs.expo.dev/eas/workflows/examples/deploy-to-production/#prerequisites) to ensure you're set up to submit to the Apple and Google stores.
-
-## Hosting
-
-Expo offers hosting for websites and API functions via EAS Hosting. See the [Getting Started](https://docs.expo.dev/eas/hosting/get-started/) guide to learn more.
-
-
-## Get a fresh project
-
-When you're ready, run:
+### インストール
 
 ```bash
-npm run reset-project
+# リポジトリをクローン
+git clone <repository-url>
+cd StepLift
+
+# 依存関係をインストール
+pnpm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 開発サーバーの起動
 
-## Learn more
+```bash
+# Expo開発サーバーを起動
+pnpm start
 
-To learn more about developing your project with Expo, look at the following resources:
+# キャッシュをクリアして起動
+npx expo start --clear
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### ローカルビルド
 
-## Join the community
+```bash
+# iOS シミュレーター
+npx expo run:ios
 
-Join our community of developers creating universal apps.
+# iOS 実機 (開発ビルド)
+npx expo run:ios --device
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Android
+npx expo run:android
+```
+
+> **Note**: HealthKit連携などのネイティブ機能は開発ビルドが必要です。Expo Goでは動作しません。
+
+## テスト
+
+```bash
+# テスト実行
+pnpm test
+
+# ウォッチモード
+pnpm test:watch
+
+# カバレッジ付き
+pnpm test:coverage
+```
+
+## プロジェクト構造
+
+```
+/
+├── app/                    # Expo Router (ファイルベースルーティング)
+│   ├── (tabs)/             # タブナビゲーション
+│   │   ├── index.tsx       # ダッシュボード
+│   │   ├── workout.tsx     # ワークアウト
+│   │   ├── steps.tsx       # 歩数
+│   │   └── history.tsx     # 履歴
+│   ├── workout/            # ワークアウト詳細画面
+│   ├── settings/           # 設定画面
+│   └── _layout.tsx         # ルートレイアウト
+├── components/             # 再利用可能なコンポーネント
+│   ├── ui/                 # UIプリミティブ
+│   ├── workout/            # ワークアウト関連
+│   ├── steps/              # 歩数関連
+│   └── settings/           # 設定関連
+├── lib/                    # ビジネスロジック
+│   ├── db/                 # データベース (SQLite)
+│   ├── stores/             # Zustand ストア
+│   └── services/           # 外部サービス連携
+├── constants/              # 定数 (カラー等)
+├── hooks/                  # カスタムフック
+├── types/                  # TypeScript型定義
+├── __tests__/              # テストファイル
+└── docs/                   # ドキュメント
+```
+
+## EASビルド・デプロイ
+
+```bash
+# プレビュービルド
+pnpm draft
+
+# 開発ビルド (EAS)
+pnpm development-builds
+
+# 本番デプロイ
+pnpm deploy
+```
+
+## ドキュメント
+
+- [PRD (製品要件定義書)](docs/PRD.md)
+- [アーキテクチャ](docs/ARCHITECTURE.md)
+- [データモデル](docs/DATA_MODEL.md)
+- [画面設計](docs/SCREENS.md)
+
+## ライセンス
+
+0BSD

@@ -2,48 +2,92 @@
 
 ## Project Overview
 
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+**StepLift** - 筋トレのワークアウト記録と歩数計を統合したフィットネスアプリ
+
+Expo SDK 54 / React Nativeを使用したモバイルアプリケーション。モバイルファーストのパターン、パフォーマンス、クロスプラットフォーム互換性を優先。
 
 ## Documentation Resources
 
-When working on this project, **always consult the official Expo documentation** available at:
+Expoの公式ドキュメントを参照:
 
-- **https://docs.expo.dev/llms.txt** - Index of all available documentation files
-- **https://docs.expo.dev/llms-full.txt** - Complete Expo documentation including Expo Router, Expo Modules API, development process
-- **https://docs.expo.dev/llms-eas.txt** - Complete EAS (Expo Application Services) documentation
-- **https://docs.expo.dev/llms-sdk.txt** - Complete Expo SDK documentation
-- **https://reactnative.dev/docs/getting-started** - Complete React Native documentation
-
-These documentation files are specifically formatted for AI agents and should be your **primary reference** for:
-
-- Expo APIs and best practices
-- Expo Router navigation patterns
-- EAS Build, Submit, and Update workflows
-- Expo SDK modules and their usage
-- Development and deployment processes
+- **https://docs.expo.dev/llms.txt** - ドキュメントインデックス
+- **https://docs.expo.dev/llms-full.txt** - Expo完全ドキュメント
+- **https://docs.expo.dev/llms-eas.txt** - EASドキュメント
+- **https://docs.expo.dev/llms-sdk.txt** - Expo SDKドキュメント
 
 ## Project Structure
 
 ```
 /
-├── app/                   # Expo Router file-based routing
-│   ├── (tabs)/            # Tab-based navigation screens
-│   │   ├── index.tsx      # Home screen
-│   │   ├── explore.tsx    # Explore screen
-│   │   └── _layout.tsx    # Tabs layout
-│   ├── _layout.tsx        # Root layout with theme provider
-│   └── modal.tsx          # Modal screen example
-├── components/            # Reusable React components
-│   ├── ui/                # UI primitives (IconSymbol, Collapsible)
-│   └── ...                # Feature components (themed, haptic, parallax)
-├── constants/             # App-wide constants (theme, colors)
-├── hooks/                 # Custom React hooks (color scheme, theme)
-├── assets/                # Static assets (images, fonts)
-├── scripts/               # Utility scripts (reset-project)
-├── .eas/workflows/        # EAS Workflows (CI/CD automation)
-├── app.json               # Expo configuration
-├── eas.json               # EAS Build/Submit configuration
-└── package.json           # Dependencies and scripts
+├── app/                      # Expo Router (ファイルベースルーティング)
+│   ├── (tabs)/               # タブナビゲーション
+│   │   ├── _layout.tsx       # タブレイアウト
+│   │   ├── index.tsx         # ダッシュボード画面
+│   │   ├── workout.tsx       # ワークアウト画面
+│   │   ├── steps.tsx         # 歩数画面
+│   │   └── history.tsx       # 履歴画面
+│   ├── workout/              # ワークアウト詳細
+│   │   └── [id].tsx          # ワークアウト詳細画面
+│   ├── settings/             # 設定
+│   │   └── index.tsx         # 設定画面
+│   └── _layout.tsx           # ルートレイアウト (テーマ、DB初期化)
+│
+├── components/               # 再利用可能なコンポーネント
+│   ├── ui/                   # UIプリミティブ
+│   │   ├── button.tsx        # ボタンコンポーネント
+│   │   ├── card.tsx          # カードコンポーネント
+│   │   └── ...
+│   ├── workout/              # ワークアウト関連
+│   │   ├── ExerciseCard.tsx
+│   │   ├── SetRow.tsx
+│   │   ├── TimeEditButton.tsx
+│   │   └── ...
+│   ├── steps/                # 歩数関連
+│   │   ├── StepsCard.tsx
+│   │   ├── WeeklyChart.tsx
+│   │   └── ...
+│   └── settings/             # 設定関連
+│       ├── SettingsSection.tsx
+│       └── SettingsItem.tsx
+│
+├── lib/                      # ビジネスロジック
+│   ├── db/                   # データベース層
+│   │   ├── index.ts          # DB初期化・エクスポート
+│   │   ├── migrations.ts     # マイグレーション
+│   │   ├── exercises.ts      # 種目CRUD
+│   │   ├── workouts.ts       # ワークアウトCRUD
+│   │   └── steps.ts          # 歩数CRUD
+│   ├── stores/               # Zustand ストア
+│   │   ├── workout-store.ts  # ワークアウト状態管理
+│   │   ├── steps-store.ts    # 歩数状態管理
+│   │   └── settings-store.ts # 設定状態管理
+│   └── services/             # 外部サービス
+│       └── healthkit.ts      # HealthKit連携
+│
+├── constants/                # 定数
+│   └── colors.ts             # カラーパレット
+│
+├── hooks/                    # カスタムフック
+│   └── use-color-scheme.ts   # カラースキーム
+│
+├── types/                    # TypeScript型定義
+│   ├── workout.ts            # ワークアウト型
+│   ├── steps.ts              # 歩数型
+│   └── exercise.ts           # 種目型
+│
+├── __tests__/                # テストファイル
+│   └── ...
+│
+├── docs/                     # ドキュメント
+│   ├── PRD.md                # 製品要件定義書
+│   ├── ARCHITECTURE.md       # アーキテクチャ
+│   ├── DATA_MODEL.md         # データモデル
+│   └── SCREENS.md            # 画面設計
+│
+├── app.json                  # Expo設定
+├── eas.json                  # EAS Build設定
+├── package.json              # 依存関係
+└── tsconfig.json             # TypeScript設定
 ```
 
 ## Essential Commands
@@ -51,113 +95,104 @@ These documentation files are specifically formatted for AI agents and should be
 ### Development
 
 ```bash
-npx expo start                  # Start dev server
-npx expo start --clear          # Clear cache and start dev server
-npx expo install <package>      # Install packages with compatible versions
-npx expo install --check        # Check which installed packages need to be updated
-npx expo install --fix          # Automatically update any invalid package versions
-npm run development-builds      # Create development builds (workflow)
-npm run reset-project           # Reset to blank template
+pnpm start                    # 開発サーバー起動
+npx expo start --clear        # キャッシュクリアして起動
+npx expo run:ios              # iOSシミュレーターでビルド
+npx expo run:ios --device     # iOS実機でビルド
+npx expo run:android          # Androidでビルド
 ```
 
-### Building & Testing
+### Testing
 
 ```bash
-npx expo doctor      # Check project health and dependencies
-npx expo lint        # Run ESLint
-npm run draft        # Publish preview update and website (workflow)
+pnpm test                     # テスト実行
+pnpm test:watch               # ウォッチモード
+pnpm test:coverage            # カバレッジ付き
 ```
 
-### Production
+### Build & Deploy
 
 ```bash
-npx eas-cli@latest build --platform ios -s          # Use EAS to build for iOS platform and submit to App Store
-npx eas-cli@latest build --platform android -s      # Use EAS to build for Android platform and submit to Google Play Store
-npm run deploy                                      # Deploy to production (workflow)
+pnpm draft                    # プレビュー更新を公開
+pnpm development-builds       # 開発ビルド作成
+pnpm deploy                   # 本番デプロイ
 ```
+
+## Technology Stack
+
+| カテゴリ | 技術 |
+|----------|------|
+| フレームワーク | Expo SDK 54 / React Native |
+| ナビゲーション | Expo Router |
+| スタイリング | NativeWind (Tailwind CSS) |
+| 状態管理 | Zustand |
+| データベース | expo-sqlite |
+| HealthKit | react-native-health |
+| テスト | Jest + Testing Library |
 
 ## Development Guidelines
 
-### Code Style & Standards
+### Code Style
 
-- **TypeScript First**: Use TypeScript for all new code with strict type checking
-- **Naming Conventions**: Use meaningful, descriptive names for variables, functions, and components
-- **Self-Documenting Code**: Write clear, readable code that explains itself; only add comments for complex business logic or design decisions
-- **React 19 Patterns**: Follow modern React patterns including:
-  - Function components with hooks
-  - Enable React Compiler
-  - Proper dependency arrays in useEffect
-  - Memoization when appropriate (useMemo, useCallback)
-  - Error boundaries for better error handling
+- **TypeScript**: すべての新規コードでTypeScriptを使用
+- **命名規則**: 意味のある説明的な名前を使用
+- **自己文書化コード**: 複雑なロジックにのみコメントを追加
 
-### Navigation & Routing
+### React Patterns
 
-- Use **Expo Router** for all navigation
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`
-- Docs: https://docs.expo.dev/router/introduction/
+- 関数コンポーネント + Hooks
+- React Compiler有効
+- 適切な依存配列
+- 必要に応じてメモ化 (useMemo, useCallback)
 
-### Recommended Libraries
+### State Management
 
-- **Navigation**: `expo-router` for navigation
-- **Images**: `expo-image` for optimized image handling and caching
-- **Animations**: `react-native-reanimated` for performant animations on native thread
-- **Gestures**: `react-native-gesture-handler` for native gesture recognition
-- **Storage**: Use `expo-sqlite` for persistent storage, `expo-sqlite/kv-store` for simple key-value storage
+- **Zustand**: グローバル状態管理
+- **ストア構造**: 機能ごとに分離 (workout, steps, settings)
+- **永続化**: SQLiteでデータ永続化
 
-## Debugging & Development Tools
+### Database
 
-### DevTools Integration
+- **expo-sqlite**: ローカルデータベース
+- **マイグレーション**: バージョン管理されたスキーマ変更
+- **CRUD関数**: lib/db/配下に集約
 
-- **React Native DevTools**: Use MCP `open_devtools` command to launch debugging tools
-- **Network Inspection**: Monitor API calls and network requests in DevTools
-- **Element Inspector**: Debug component hierarchy and styles
-- **Performance Profiler**: Identify performance bottlenecks
-- **Logging**: Use `console.log` for debugging (remove before production), `console.warn` for deprecation notices, `console.error` for actual errors, and implement error boundaries for production error handling
+## HealthKit Integration
 
-### Testing & Quality Assurance
+HealthKit連携はネイティブモジュールを使用するため、開発ビルドが必要。
 
-#### Automated Testing with MCP Tools
+```bash
+# 開発ビルドを作成
+npx expo run:ios --device
+```
 
-Developers can configure the Expo MCP server with the following doc: https://docs.expo.dev/eas/ai/mcp/
-
-- **Component Testing**: Add `testID` props to components for automation
-- **Visual Testing**: Use MCP `automation_take_screenshot` to verify UI appearance
-- **Interaction Testing**: Use MCP `automation_tap_by_testid` to simulate user interactions
-- **View Verification**: Use MCP `automation_find_view_by_testid` to validate component rendering
-
-## EAS Workflows CI/CD
-
-This project is pre-configured with **EAS Workflows** for automating development and release processes. Workflows are defined in `.eas/workflows/` directory.
-
-When working with EAS Workflows, **always refer to**:
-
-- https://docs.expo.dev/eas/workflows/ for workflow examples
-- The `.eas/workflows/` directory for existing workflow configurations
-- You can check that a workflow YAML is valid using the workflows schema: https://exp.host/--/api/v2/workflows/schema
-
-### Build Profiles (eas.json)
-
-- **development**: Development builds with dev client
-- **development-simulator**: Development builds for iOS simulator
-- **preview**: Internal distribution preview builds
-- **production**: Production builds with auto-increment
+Expo Goでは動作しないため、`Constants.appOwnership`で判定して適切なメッセージを表示。
 
 ## Troubleshooting
 
-### Expo Go Errors & Development Builds
+### Expo Goでエラーが発生する場合
 
-If there are errors in **Expo Go** or the project is not running, create a **development build**. **Expo Go** is a sandbox environment with a limited set of native modules. To create development builds, run `eas build:dev`. Additionally, after installing new packages or adding config plugins, new development builds are often required.
+ネイティブモジュール (HealthKitなど) を使用する機能は開発ビルドが必要:
+
+```bash
+npx expo run:ios --device
+```
+
+### メトロバンドラーのキャッシュ問題
+
+```bash
+npx expo start --clear
+```
+
+### Xcodeの設定
+
+```bash
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+```
 
 ## AI Agent Instructions
 
-When working on this project:
-
-1. **Always start by consulting the appropriate documentation**:
-
-   - For general Expo questions: https://docs.expo.dev/llms-full.txt
-   - For EAS/deployment questions: https://docs.expo.dev/llms-eas.txt
-   - For SDK/API questions: https://docs.expo.dev/llms-sdk.txt
-
-2. **Understand before implementing**: Read the relevant docs section before writing code
-
-3. **Follow existing patterns**: Look at existing components and screens for patterns to follow
+1. **ドキュメント優先**: 実装前に関連ドキュメントを確認
+2. **既存パターンに従う**: 既存コンポーネントのパターンを参考に
+3. **型安全性**: TypeScriptの型を活用
+4. **テスト**: 新機能にはテストを追加

@@ -108,6 +108,22 @@ export function getWorkoutsByDateRange(startDate: string, endDate: string): Work
 }
 
 /**
+ * 日付範囲でワークアウトをセット情報とともに取得
+ */
+export function getWorkoutsWithSetsByDateRange(startDate: string, endDate: string): WorkoutWithSets[] {
+  try {
+    const workouts = getWorkoutsByDateRange(startDate, endDate);
+    return workouts.map(workout => {
+      const workoutWithSets = getWorkoutWithSets(workout.id);
+      return workoutWithSets!;
+    }).filter(Boolean);
+  } catch (error) {
+    console.error('[Workouts] セット付きワークアウトの取得エラー:', error);
+    throw new Error(`ワークアウトの取得に失敗しました: ${error}`);
+  }
+}
+
+/**
  * 最近のワークアウトを取得
  */
 export function getRecentWorkouts(limit: number = 10): Workout[] {
